@@ -1,6 +1,6 @@
 import warnings
 from numbers import Number
-from typing import Dict, List, Optional, Sequence, Union, cast
+from typing import Callable, Dict, List, Optional, Sequence, Union, cast, Any
 
 import numpy as np
 import pandas as pd
@@ -101,11 +101,7 @@ class _Array(np.ndarray):
         return df
 
 
-class _Indicator(_Array):
-    pass
-
-
-class _Data:
+class Data:
     """
     A data array accessor. Provides access to OHLCV "columns"
     as a standard `pd.DataFrame` would, except it's not a DataFrame
@@ -205,3 +201,7 @@ class _Data:
 
     def __setstate__(self, state):
         self.__dict__ = state
+
+
+class Indicator(_Array):
+    pass
