@@ -1,9 +1,10 @@
-import warnings
 from numbers import Number
-from typing import Callable, Dict, List, Optional, Sequence, Union, cast, Any
+from typing import Dict, Optional, cast
 
 import numpy as np
 import pandas as pd
+
+from fx_lib.models.data import _Array
 
 
 def try_(lazy_func, default=None, exception=Exception):
@@ -28,77 +29,6 @@ def _as_str(value) -> str:
     if len(name) > 10:
         name = name[:9] + "…"
     return name
-
-
-def _as_list(value) -> List:
-    if isinstance(value, Sequence) and not isinstance(value, str):
-        return list(value)
-    return [value]
-
-
-def _data_period(index) -> Union[pd.Timedelta, Number]:
-    """Return data index period as pd.Timedelta"""
-    values = pd.Series(index[-100:])
-    return values.diff().dropna().median()
-
-
-class _Array(np.ndarray):
-    """
-    ndarray extended to supply .name and other arbitrary properties
-    in ._opts dict.
-    """
-
-    def __new__(cls, array, *, name=None, **kwargs):
-        obj = np.asarray(array).view(cls)
-        obj.name = name or array.name
-        obj._opts = kwargs
-        return obj
-
-    def __array_finalize__(self, obj):
-        if obj is not None:
-            self.name = getattr(obj, "name", "")
-            self._opts = getattr(obj, "_opts", {})
-
-    # Make sure properties name and _opts are carried over
-    # when (un-)pickling.
-    def __reduce__(self):
-        value = super().__reduce__()
-        return value[:2] + (value[2] + (self.__dict__,),)
-
-    def __setstate__(self, state):
-        self.__dict__.update(state[-1])
-        super().__setstate__(state[:-1])
-
-    def __bool__(self):
-        try:
-            return bool(self[-1])
-        except IndexError:
-            return super().__bool__()
-
-    def __float__(self):
-        try:
-            return float(self[-1])
-        except IndexError:
-            return super().__float__()
-
-    def to_series(self):
-        warnings.warn(
-            "`.to_series()` is deprecated. For pd.Series conversion, use accessor `.s`"
-        )
-        return self.s
-
-    @property
-    def s(self) -> pd.Series:
-        values = np.atleast_2d(self)
-        index = self._opts["index"][: values.shape[1]]
-        return pd.Series(values[0], index=index, name=self.name)
-
-    @property
-    def df(self) -> pd.DataFrame:
-        values = np.atleast_2d(np.asarray(self))
-        index = self._opts["index"][: values.shape[1]]
-        df = pd.DataFrame(values.T, index=index, columns=[self.name] * len(values))
-        return df
 
 
 class Data:
@@ -201,7 +131,3 @@ class Data:
 
     def __setstate__(self, state):
         self.__dict__ = state
-
-
-class Indicator(_Array):
-    pass

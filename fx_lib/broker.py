@@ -1,10 +1,11 @@
 from typing import Callable
-from fx_lib.interfaces import IBroker, IClient
+
 import pandas as pd
 
-from fx_lib.models.instruments import Candlestick
+from fx_lib.interfaces import IBroker, IClient
 from fx_lib.models.granularity import Granularity
-from fx_lib.models.instruments import Instrument
+from fx_lib.models.instruments import Candlestick, Instrument
+
 
 class FxBroker(IBroker):
 
@@ -35,14 +36,18 @@ class FxBroker(IBroker):
         granularity: Granularity,
         callback: Callable[[Candlestick], None],
     ):
-        self.client.subscribe(instrument, granularity, callback)
+        # self.client.subscribe(instrument, granularity, callback)
+        pass
+
 
 class BacktestBroker:
 
-    def __init__(data: pd.Dataframe):
+    def __init__(self, data: pd.DataFrame):
         pass
 
-    def run():
+    def run(
+        self,
+    ):
         pass
 
     def new_order(self, size, limit, stop, sl, tp, tag):
