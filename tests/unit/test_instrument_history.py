@@ -5,11 +5,12 @@ from datetime import datetime, timedelta
 import pandas as pd
 import pytest
 
-from fx_lib.models.granularity import MINUTES_MAP, Granularity
 from fx_lib.models.instruments import (
     COLUMNS,
     INDEX,
+    MINUTES_MAP,
     Candlestick,
+    Granularity,
     Instrument,
     InstrumentCandles,
 )

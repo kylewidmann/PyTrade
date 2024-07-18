@@ -4,10 +4,13 @@ from typing import List
 
 from fx_lib.broker import FxBroker
 from fx_lib.interfaces.broker import IBroker
-from fx_lib.models import Candlestick
 from fx_lib.models.data import Indicator
-from fx_lib.models.granularity import MINUTES_MAP
-from fx_lib.models.instruments import CandleData, CandleSubscription
+from fx_lib.models.instruments import (
+    MINUTES_MAP,
+    CandleData,
+    Candlestick,
+    CandleSubscription,
+)
 
 # from ._util import Data
 

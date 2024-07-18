@@ -6,8 +6,13 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 
-from fx_lib.models.granularity import MINUTES_MAP, Granularity
-from fx_lib.models.instruments import Candlestick, CandleSubscription, Instrument
+from fx_lib.models.instruments import (
+    MINUTES_MAP,
+    Candlestick,
+    CandleSubscription,
+    Granularity,
+    Instrument,
+)
 from fx_lib.strategy import FxStrategy
 
 TEST_SUBCRIPTIONS = [

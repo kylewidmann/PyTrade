@@ -4,8 +4,13 @@ from datetime import datetime, timedelta
 import pandas as pd
 
 from fx_lib.models.data import Indicator
-from fx_lib.models.granularity import MINUTES_MAP, Granularity
-from fx_lib.models.instruments import Candlestick, Instrument, InstrumentCandles
+from fx_lib.models.instruments import (
+    MINUTES_MAP,
+    Candlestick,
+    Granularity,
+    Instrument,
+    InstrumentCandles,
+)
 
 
 def get_candles(

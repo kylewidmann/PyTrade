@@ -1,7 +1,3 @@
-class Order:
-    pass
-
-
 class Trade:
     pass
 

@@ -1,19 +1,21 @@
-from typing import Callable
+from typing import Callable, List
 
 import pandas as pd
 
-from fx_lib.interfaces import IBroker, IClient
-from fx_lib.models.granularity import Granularity
-from fx_lib.models.instruments import Candlestick, Instrument
+from fx_lib.interfaces.broker import IBroker
+from fx_lib.interfaces.client import IClient
+from fx_lib.models.instruments import Candlestick, Granularity, Instrument
+from fx_lib.models.order import OrderRequest
 
 
 class FxBroker(IBroker):
 
     def __init__(self, client: IClient):
         self.client = client
+        self._pending_orders: List[OrderRequest] = []
 
     def new_order(self, size, limit, stop, sl, tp, tag):
-        raise NotImplementedError
+        self._pending_orders.append(OrderRequest())
 
     @property
     def equity(self) -> float:
@@ -28,7 +30,8 @@ class FxBroker(IBroker):
         # return max(0, self.equity - margin_used)
 
     def process_orders(self):
-        pass
+        for order in self._pending_orders:
+            self.client.new_order(order)
 
     def subscribe(
         self,
@@ -36,8 +39,7 @@ class FxBroker(IBroker):
         granularity: Granularity,
         callback: Callable[[Candlestick], None],
     ):
-        # self.client.subscribe(instrument, granularity, callback)
-        pass
+        self.client.subscribe(instrument, granularity, callback)
 
 
 class BacktestBroker:
