@@ -29,7 +29,7 @@ class OrderRequest(dict):
         time_in_force: TimeInForce,
         take_profit_on_fill: Optional[float],
         stop_loss_on_fill: Optional[float],
-        trailing_stop_loss_on_fill: Optional[float]
+        trailing_stop_loss_on_fill: Optional[float],
     ):
         # super().__init__(
         #     instrument=instrument,
@@ -86,7 +86,7 @@ class MarketOrderRequest(OrderRequest):
         take_profit_on_fill: Optional[float] = None,
         stop_loss_on_fill: Optional[float] = None,
         trailing_stop_loss_on_fill: Optional[float] = None,
-        price_bound: Optional[float] = None
+        price_bound: Optional[float] = None,
     ):
         super().__init__(
             instrument,
@@ -117,7 +117,7 @@ class LimitOrderRequest(OrderRequest):
         time_in_force: TimeInForce,
         take_profit_on_fill: Optional[float],
         stop_loss_on_fill: Optional[float],
-        trailing_stop_loss_on_fill: Optional[float]
+        trailing_stop_loss_on_fill: Optional[float],
     ):
         self._price = price
 
@@ -142,7 +142,7 @@ class StopOrderRequest(OrderRequest):
         take_profit_on_fill: float,
         stop_loss_on_fill: float,
         trailing_stop_loss_on_fill: float,
-        price_bound: Optional[float]
+        price_bound: Optional[float],
     ):
         self._price = price
         self._price_bound = price_bound

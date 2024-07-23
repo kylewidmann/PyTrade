@@ -10,6 +10,8 @@ from fx_lib.models.instruments import (
     CandleData,
     Candlestick,
     CandleSubscription,
+    Granularity,
+    Instrument,
 )
 
 # from ._util import Data
@@ -266,12 +268,12 @@ class FxStrategy:
         self._data_context = CandleData(max_size=max_history)
         self._pending_updates: List[CandleSubscription] = []
 
-    def init(self):
+    def init(self) -> None:
         self._caluclate_updates()
         self._monitor_instruments()
         self._init()
 
-    def _caluclate_updates(self):
+    def _caluclate_updates(self) -> None:
         self._required_updates: list[CandleSubscription] = []
         max_interval = 0
         for subscription in self.subscriptions:
@@ -296,7 +298,7 @@ class FxStrategy:
         """
         raise NotImplementedError()
 
-    def _monitor_instruments(self):
+    def _monitor_instruments(self) -> None:
         for subscription in self.subscriptions:
             self.broker.subscribe(
                 subscription.instrument,
@@ -304,7 +306,7 @@ class FxStrategy:
                 self._update_instrument,
             )
 
-    def _update_instrument(self, candle: Candlestick):
+    def _update_instrument(self, candle: Candlestick) -> None:
         self._data_context.update(candle)
         self._pending_updates.remove(
             CandleSubscription(candle.instrument, candle.granularity)
@@ -313,24 +315,33 @@ class FxStrategy:
         if not self._pending_updates:
             self._updates_complete.set()
 
-    async def next(self):
+    async def next(self) -> None:
         await self._updates_complete.wait()
         self._next()
         self._pending_updates = self._required_updates.copy()
 
+    def get_data(self, instrument: Instrument, granularity: Granularity) -> InstrumentCandles:
+        return self._data_context.get(instrument, granularity)
+
     @abstractmethod
-    def _init(self):
+    def _init(self) -> None:
         """
         Create indicators to be used for signals in the `_next` method.
         """
         raise NotImplementedError()
 
     @abstractmethod
-    def _next(self):
+    def _next(self) -> None:
         """
         Evaluate indicators and submit orders to the broker
         """
         raise NotImplementedError()
+
+    def buy(self, size, tp: None, sl: None) -> None:
+        pass
+
+    def sell(self, size, tp: None, sl: None) -> None:
+        pass
 
 
 class BacktestStrategy:

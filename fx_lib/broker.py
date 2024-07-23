@@ -14,9 +14,6 @@ class FxBroker(IBroker):
         self.client = client
         self._pending_orders: List[OrderRequest] = []
 
-    def new_order(self, size, limit, stop, sl, tp, tag):
-        self._pending_orders.append(OrderRequest())
-
     @property
     def equity(self) -> float:
         raise NotImplementedError
@@ -29,9 +26,12 @@ class FxBroker(IBroker):
         # margin_used = sum(trade.value / self._leverage for trade in self.trades)
         # return max(0, self.equity - margin_used)
 
+    def order(self, order: OrderRequest):
+        self._pending_orders.append(order)
+
     def process_orders(self):
         for order in self._pending_orders:
-            self.client.new_order(order)
+            self.client.order(order)
 
     def subscribe(
         self,

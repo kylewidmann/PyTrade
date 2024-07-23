@@ -10,8 +10,8 @@ class IBroker(metaclass=abc.ABCMeta):
     @classmethod
     def __subclasshook__(cls, subclass):
         return (
-            hasattr(subclass, "new_order")
-            and callable(subclass.new_order)
+            hasattr(subclass, "order")
+            and callable(subclass.order)
             and hasattr(subclass, "equity")
             and hasattr(subclass, "margin_available")
             or NotImplemented
@@ -32,7 +32,7 @@ class IBroker(metaclass=abc.ABCMeta):
         return max(0, self.equity - margin_used)
 
     @abc.abstractmethod
-    def new_order(self, order: OrderRequest):
+    def order(self, order: OrderRequest):
         raise NotImplementedError()
 
     @abc.abstractmethod
