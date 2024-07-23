@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from typing import Callable
 
 import numpy as np
 
@@ -67,21 +68,27 @@ class _Array(np.ndarray):
 
 class Indicator:
 
-    def __init__(self, data: IInstrumentData):
+    def __init__(self, data: IInstrumentData, *args, **kwargs):
         self._data = data.df
-        self._values: _Array = _Array()
         data.on_update += self._update
+        self._values: np.ndarray = np.ndarray()
+        self._args = args
+        self._kwargs = kwargs
 
     def _update(self):
-        self._values = _Array(self._run())
+        self._values = _Array(self._run(self._args, self._kwargs))
 
     @abstractmethod
-    def _run(self) -> np.ndarray:
+    def _run(self, *args, **kwargs) -> np.ndarray:
         raise NotImplementedError()
 
     @property
     def value(self):
         return self._values[-1] if len(self._values) > 0 else None
+    
+    @property
+    def to_array(self):
+        return self._values
 
     def __eq__(self, other):
         result = False
