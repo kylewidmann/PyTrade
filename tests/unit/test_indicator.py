@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 
-from fx_lib.models.data import Indicator
+from fx_lib.models.indicator import Indicator
 from fx_lib.models.instruments import (
     MINUTES_MAP,
     Candlestick,

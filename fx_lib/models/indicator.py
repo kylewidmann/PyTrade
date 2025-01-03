@@ -69,14 +69,14 @@ class _Array(np.ndarray):
 class Indicator:
 
     def __init__(self, data: IInstrumentData, *args, **kwargs):
-        self._data = data.df
+        self._data = data
         data.on_update += self._update
-        self._values: np.ndarray = np.ndarray()
         self._args = args
         self._kwargs = kwargs
+        self._values = self._run(self._args, self._kwargs)
 
     def _update(self):
-        self._values = _Array(self._run(self._args, self._kwargs))
+        self._values = self._run(self._args, self._kwargs)
 
     @abstractmethod
     def _run(self, *args, **kwargs) -> np.ndarray:

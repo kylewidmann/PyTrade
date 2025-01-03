@@ -3,9 +3,10 @@ from enum import Enum
 from typing import Optional
 
 import pandas as pd
+from pandas import Timestamp
 import pytz
 
-from fx_lib.events import Event
+from fx_lib.events.event import Event
 from fx_lib.interfaces.data import IInstrumentData
 
 
@@ -51,7 +52,6 @@ class Instrument(Enum):
 
 instrument_lookup = {m.value: m for m in Instrument}
 
-
 class CandleSubscription:
 
     def __init__(self, instrument: Instrument, granularity: Granularity):
@@ -93,7 +93,7 @@ class CandleSubscription:
 
 class Candlestick:
 
-    def __init__(self, instrument, granularity, open, high, low, close, timestamp):
+    def __init__(self, instrument: Instrument, granularity: Granularity, open: float, high: float, low: float, close: float, timestamp: Timestamp):
         self.instrument = instrument
         self.granularity = granularity
         self.open = open
@@ -132,7 +132,7 @@ class TickData:
 
 COLUMNS = ["Timestamp", "Instrument", "Open", "High", "Low", "Close"]
 
-INDEX = [COLUMNS[0]]
+INDEX = COLUMNS[0]
 
 
 class InstrumentCandles(IInstrumentData):
@@ -143,7 +143,11 @@ class InstrumentCandles(IInstrumentData):
         self._data: pd.DataFrame = (
             data if data is not None else pd.DataFrame(columns=COLUMNS)
         )
-        self._data.set_index(INDEX, inplace=True)
+        if not isinstance(self._data.index, pd.DatetimeIndex):
+            if INDEX in self._data.columns:
+                self._data.set_index([INDEX], inplace=True)
+            else:
+                raise RuntimeError("Dataframe does not have a datetime index and does not have a 'Timestamp' column")
         self._max_size: Optional[int] = max_size
         self.__instrument: Optional[Instrument] = None
         self.__granularity: Optional[Granularity] = None
@@ -152,22 +156,6 @@ class InstrumentCandles(IInstrumentData):
     @property
     def df(self):
         return self._data
-
-    @property
-    def Open(self):
-        return self.df.Open
-
-    @property
-    def High(self):
-        return self.df.High
-
-    @property
-    def Low(self):
-        return self.df.Low
-
-    @property
-    def Close(self):
-        return self.df.Close
 
     @property
     def on_update(self):
@@ -221,7 +209,8 @@ class CandleData:
 
     def __new__(cls, *args, **kwargs):
         if not hasattr(cls, "instance"):
-            cls.instance = super(CandleData, cls).__new__(cls)
+            cls.instance = super().__new__(cls)
+        # Need to handle case where instantiatied and different max size is provided
         return cls.instance
 
     def get(self, instrument: Instrument, granularity: Granularity):
@@ -235,7 +224,7 @@ class CandleData:
     def update(self, candle: Candlestick):
         key = (candle.instrument, candle.granularity)
         instrument_candles: InstrumentCandles = self._data.get(
-            (candle.instrument, candle.granularity),
+            key,
             InstrumentCandles(max_size=self._max_size),
         )
         self._data[key] = instrument_candles

@@ -2,7 +2,7 @@ from abc import abstractmethod
 
 import pandas as pd
 
-from fx_lib.events import Event
+from fx_lib.events.event import Event
 
 
 class IInstrumentData:
@@ -21,3 +21,20 @@ class IInstrumentData:
     @abstractmethod
     def on_update(self, value: Event):
         raise NotImplementedError()
+
+
+    @property
+    def Open(self):
+        return self.df.Open
+
+    @property
+    def High(self):
+        return self.df.High
+
+    @property
+    def Low(self):
+        return self.df.Low
+
+    @property
+    def Close(self):
+        return self.df.Close

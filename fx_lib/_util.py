@@ -4,7 +4,7 @@ from typing import Dict, Optional, cast
 import numpy as np
 import pandas as pd
 
-from fx_lib.models.data import _Array
+from fx_lib.models.indicator import _Array
 
 
 def try_(lazy_func, default=None, exception=Exception):
@@ -112,7 +112,15 @@ class Data:
     @property
     def Low(self) -> _Array:
         return self.__get_array("Low")
-
+        # super().__init__(
+        #     instrument=instrument,
+        #     units=units,
+        #     price=price,
+        #     time_in_force=time_in_force,
+        #     take_profit_on_fill=take_profit_on_fill,
+        #     stop_loss_on_fill=stop_loss_on_fill,
+        #     trailing_stop_loss_on_fill=trailing_stop_loss_on_fill
+        # )
     @property
     def Close(self) -> _Array:
         return self.__get_array("Close")

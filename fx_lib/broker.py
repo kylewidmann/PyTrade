@@ -40,17 +40,3 @@ class FxBroker(IBroker):
         callback: Callable[[Candlestick], None],
     ):
         self.client.subscribe(instrument, granularity, callback)
-
-
-class BacktestBroker:
-
-    def __init__(self, data: pd.DataFrame):
-        pass
-
-    def run(
-        self,
-    ):
-        pass
-
-    def new_order(self, size, limit, stop, sl, tp, tag):
-        pass
