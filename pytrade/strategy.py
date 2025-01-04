@@ -1,10 +1,6 @@
 import asyncio
 from abc import abstractmethod
-from typing import List, Optional
 
-import pandas as pd
-
-from pytrade.broker import FxBroker
 from pytrade.interfaces.broker import IBroker
 from pytrade.models.indicator import Indicator
 from pytrade.models.instruments import (
@@ -24,7 +20,7 @@ class FxStrategy:
         self.broker = broker
         self._updates_complete = asyncio.Event()
         self._data_context = data_context
-        self._pending_updates: List[CandleSubscription] = []
+        self._pending_updates: list[CandleSubscription] = []
 
     def init(self) -> None:
         self._caluclate_updates()
@@ -78,7 +74,9 @@ class FxStrategy:
         self._next()
         self._pending_updates = self._required_updates.copy()
 
-    def get_data(self, instrument: Instrument, granularity: Granularity) -> InstrumentCandles:
+    def get_data(
+        self, instrument: Instrument, granularity: Granularity
+    ) -> InstrumentCandles:
         return self._data_context.get(instrument, granularity)
 
     @abstractmethod
@@ -95,10 +93,10 @@ class FxStrategy:
         """
         raise NotImplementedError()
 
-    def buy(self, size, tp = None, sl = None) -> None:
+    def buy(self, size, tp=None, sl=None) -> None:
         pass
 
-    def sell(self, size, tp = None, sl = None) -> None:
+    def sell(self, size, tp=None, sl=None) -> None:
         pass
 
 

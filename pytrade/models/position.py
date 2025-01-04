@@ -1,5 +1,8 @@
 import numpy as np
 
+from pytrade.models.trade import Trade
+
+
 class Position:
     """
     Currently held asset position, available as
@@ -11,7 +14,7 @@ class Position:
             ...  # we have a position, either long or short
     """
 
-    def __init__(self, trades: list["Trade"]):
+    def __init__(self, trades: list[Trade]):
         self._trades = trades
 
     def __bool__(self):

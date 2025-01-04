@@ -23,4 +23,3 @@ class TypedEvent(Generic[T]):
     def __call__(self, *args, **kwargs):
         for callback in self._callbacks:
             callback(*args, **kwargs)
-

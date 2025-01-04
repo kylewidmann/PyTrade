@@ -1,7 +1,5 @@
 from typing import Callable, List
 
-import pandas as pd
-
 from pytrade.interfaces.broker import IBroker
 from pytrade.interfaces.client import IClient
 from pytrade.models.instruments import Candlestick, Granularity, Instrument

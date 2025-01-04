@@ -1,7 +1,12 @@
 from copy import copy
 from math import copysign
 from typing import Optional, Union
+
+import numpy as np
 import pandas as pd
+
+from pytrade.models.order import Order
+
 
 class Trade:
     """
@@ -15,6 +20,8 @@ class Trade:
         self.__exit_price: Optional[float] = None
         self.__entry_bar: int = entry_bar
         self.__exit_bar: Optional[int] = None
+        self.__entry_time = None
+        self.__exit_time = None
         self.__sl_order: Optional["Order"] = None
         self.__tp_order: Optional["Order"] = None
         self.__tag = tag
@@ -36,9 +43,13 @@ class Trade:
 
     def close(self, portion: float = 1.0):
         """Place new `"Order"` to close `portion` of the trade at next market price."""
-        assert 0 < portion <= 1, "portion must be a fraction between 0 and 1"
+        if not 0 < portion <= 1:
+            raise RuntimeError(
+                f"Invalid portion for trade ({portion}).  Must be a fraction between 0 and 1."
+            )
+
         size = copysign(max(1, round(abs(self.__size) * portion)), -self.__size)
-        return "Order"(size, parent_trade=self, tag=self.__tag)
+        return Order(size, parent_trade=self, tag=self.__tag)
 
     # Fields getters
 
@@ -96,7 +107,7 @@ class Trade:
     @property
     def entry_time(self) -> Union[pd.Timestamp, int]:
         """Datetime of when the trade was entered."""
-        return self.__entry_time
+        return self.__entry_time  # type: ignore
 
     @property
     def exit_time(self) -> Optional[Union[pd.Timestamp, int]]:
@@ -164,8 +175,12 @@ class Trade:
         self.__set_contingent("tp", price)
 
     def __set_contingent(self, type, price):
-        assert type in ("sl", "tp")
-        assert price is None or 0 < price < np.inf
+        if type not in ("sl", "tp"):
+            raise RuntimeError(f"Invalid type supplied for trade {type}")
+
+        if not (price is None or 0 < price < np.inf):
+            raise RuntimeError(f"Invalid price ({price}) provided for trade.")
+
         attr = f"_{self.__class__.__qualname__}__{type}_order"
         order: "Order" = getattr(self, attr)
         if order:

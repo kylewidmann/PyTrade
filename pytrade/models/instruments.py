@@ -3,8 +3,8 @@ from enum import Enum
 from typing import Optional
 
 import pandas as pd
-from pandas import Timestamp
 import pytz
+from pandas import Timestamp
 
 from pytrade.events.event import Event
 from pytrade.interfaces.data import IInstrumentData
@@ -52,6 +52,7 @@ class Instrument(Enum):
 
 instrument_lookup = {m.value: m for m in Instrument}
 
+
 class CandleSubscription:
 
     def __init__(self, instrument: Instrument, granularity: Granularity):
@@ -93,7 +94,16 @@ class CandleSubscription:
 
 class Candlestick:
 
-    def __init__(self, instrument: Instrument, granularity: Granularity, open: float, high: float, low: float, close: float, timestamp: Timestamp):
+    def __init__(
+        self,
+        instrument: Instrument,
+        granularity: Granularity,
+        open: float,
+        high: float,
+        low: float,
+        close: float,
+        timestamp: Timestamp,
+    ):
         self.instrument = instrument
         self.granularity = granularity
         self.open = open
@@ -147,7 +157,9 @@ class InstrumentCandles(IInstrumentData):
             if INDEX in self._data.columns:
                 self._data.set_index([INDEX], inplace=True)
             else:
-                raise RuntimeError("Dataframe does not have a datetime index and does not have a 'Timestamp' column")
+                raise RuntimeError(
+                    "Dataframe does not have a datetime index and does not have a 'Timestamp' column"
+                )
         self._max_size: Optional[int] = max_size
         self.__instrument: Optional[Instrument] = None
         self.__granularity: Optional[Granularity] = None

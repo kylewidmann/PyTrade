@@ -121,6 +121,7 @@ class Data:
         #     stop_loss_on_fill=stop_loss_on_fill,
         #     trailing_stop_loss_on_fill=trailing_stop_loss_on_fill
         # )
+
     @property
     def Close(self) -> _Array:
         return self.__get_array("Close")

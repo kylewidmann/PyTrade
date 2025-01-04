@@ -1,5 +1,4 @@
 from abc import abstractmethod
-from typing import Callable
 
 import numpy as np
 
@@ -85,7 +84,7 @@ class Indicator:
     @property
     def value(self):
         return self._values[-1] if len(self._values) > 0 else None
-    
+
     @property
     def to_array(self):
         return self._values

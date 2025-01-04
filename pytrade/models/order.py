@@ -2,6 +2,7 @@ from enum import Enum
 from typing import Optional
 
 from pytrade.models.instruments import Instrument
+from pytrade.models.trade import Trade
 
 
 class TimeInForce(Enum):
@@ -18,6 +19,7 @@ class OrderType(Enum):
     MARKET = "MARKET"
     LIMIT = "LIMIT"
     STOP = "STOP"
+
 
 class Order:
     """
@@ -45,7 +47,9 @@ class Order:
         parent_trade: Optional["Trade"] = None,
         tag: object = None,
     ):
-        assert size != 0
+        if size == 0:
+            raise RuntimeError("Invalid size provided for order.")
+
         self.__size = size
         self.__limit_price = limit_price
         self.__stop_price = stop_price
@@ -175,6 +179,7 @@ class Order:
                 trade._replace(tp_order=None)
             else:
                 raise RuntimeError()
+
 
 class OrderRequest(dict):
 

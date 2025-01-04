@@ -22,7 +22,6 @@ class IInstrumentData:
     def on_update(self, value: Event):
         raise NotImplementedError()
 
-
     @property
     def Open(self):
         return self.df.Open
