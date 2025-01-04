@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "fx-lib"
+name = "pytrade"
 version = "0.1.0"
 description = ""
 authors = ["Kyle Widmann <Kyle.Widmann@gmail.com>"]
@@ -52,7 +52,7 @@ exclude_also = [
     "@(abc\\.)?abstractmethod",
 ]
 omit = [
-    "fx_lib/interfaces/*",
-    "fx_lib/models/*"
+    "pytrade/interfaces/*",
+    "pytrade/models/*"
 ]
 

@@ -3,8 +3,8 @@ from typing import Callable
 
 from multimethod import multimethod
 
-from fx_lib.models.instruments import Candlestick, Granularity, Instrument
-from fx_lib.models.order import MarketOrderRequest
+from pytrade.models.instruments import Candlestick, Granularity, Instrument
+from pytrade.models.order import MarketOrderRequest
 
 
 class IClient:

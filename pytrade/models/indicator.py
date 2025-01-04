@@ -3,7 +3,7 @@ from typing import Callable
 
 import numpy as np
 
-from fx_lib.interfaces.data import IInstrumentData
+from pytrade.interfaces.data import IInstrumentData
 
 
 class _Array(np.ndarray):

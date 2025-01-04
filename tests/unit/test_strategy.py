@@ -6,14 +6,14 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 
-from fx_lib.models.instruments import (
+from pytrade.models.instruments import (
     MINUTES_MAP,
     Candlestick,
     CandleSubscription,
     Granularity,
     Instrument,
 )
-from fx_lib.strategy import FxStrategy
+from pytrade.strategy import FxStrategy
 
 TEST_SUBCRIPTIONS = [
     CandleSubscription(Instrument.EURUSD, Granularity.M5),

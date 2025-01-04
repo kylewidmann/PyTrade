@@ -2,7 +2,7 @@ from abc import abstractmethod
 
 import pandas as pd
 
-from fx_lib.events.event import Event
+from pytrade.events.event import Event
 
 
 class IInstrumentData:

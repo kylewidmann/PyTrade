@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional
 
-from fx_lib.models.instruments import Instrument
+from pytrade.models.instruments import Instrument
 
 
 class TimeInForce(Enum):

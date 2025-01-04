@@ -1,8 +1,8 @@
 import abc
 from typing import Callable
 
-from fx_lib.models.instruments import Candlestick, Granularity, Instrument
-from fx_lib.models.order import OrderRequest
+from pytrade.models.instruments import Candlestick, Granularity, Instrument
+from pytrade.models.order import OrderRequest
 
 
 class IBroker(metaclass=abc.ABCMeta):

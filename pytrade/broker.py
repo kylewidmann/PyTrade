@@ -2,10 +2,10 @@ from typing import Callable, List
 
 import pandas as pd
 
-from fx_lib.interfaces.broker import IBroker
-from fx_lib.interfaces.client import IClient
-from fx_lib.models.instruments import Candlestick, Granularity, Instrument
-from fx_lib.models.order import OrderRequest
+from pytrade.interfaces.broker import IBroker
+from pytrade.interfaces.client import IClient
+from pytrade.models.instruments import Candlestick, Granularity, Instrument
+from pytrade.models.order import OrderRequest
 
 
 class FxBroker(IBroker):

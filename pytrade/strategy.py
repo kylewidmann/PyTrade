@@ -4,10 +4,10 @@ from typing import List, Optional
 
 import pandas as pd
 
-from fx_lib.broker import FxBroker
-from fx_lib.interfaces.broker import IBroker
-from fx_lib.models.indicator import Indicator
-from fx_lib.models.instruments import (
+from pytrade.broker import FxBroker
+from pytrade.interfaces.broker import IBroker
+from pytrade.models.indicator import Indicator
+from pytrade.models.instruments import (
     MINUTES_MAP,
     CandleData,
     Candlestick,

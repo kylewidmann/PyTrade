@@ -6,8 +6,8 @@ import pandas as pd
 from pandas import Timestamp
 import pytz
 
-from fx_lib.events.event import Event
-from fx_lib.interfaces.data import IInstrumentData
+from pytrade.events.event import Event
+from pytrade.interfaces.data import IInstrumentData
 
 
 class Granularity(Enum):

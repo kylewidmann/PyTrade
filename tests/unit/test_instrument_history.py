@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 import pytest
 
-from fx_lib.models.instruments import (
+from pytrade.models.instruments import (
     COLUMNS,
     INDEX,
     MINUTES_MAP,

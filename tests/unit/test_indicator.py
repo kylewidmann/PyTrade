@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 
-from fx_lib.models.indicator import Indicator
-from fx_lib.models.instruments import (
+from pytrade.models.indicator import Indicator
+from pytrade.models.instruments import (
     MINUTES_MAP,
     Candlestick,
     Granularity,

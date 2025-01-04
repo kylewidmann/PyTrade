@@ -4,7 +4,7 @@ from typing import Dict, Optional, cast
 import numpy as np
 import pandas as pd
 
-from fx_lib.models.indicator import _Array
+from pytrade.models.indicator import _Array
 
 
 def try_(lazy_func, default=None, exception=Exception):
