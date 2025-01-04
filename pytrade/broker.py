@@ -30,7 +30,7 @@ class FxBroker(IBroker):
     def process_orders(self):
         for order in self._pending_orders:
             self.client.order(order)
-        
+
         self._pending_orders.clear()
 
     def subscribe(

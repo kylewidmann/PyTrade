@@ -2,7 +2,6 @@ import asyncio
 from abc import abstractmethod
 
 from pytrade.interfaces.broker import IBroker
-from pytrade.models.indicator import Indicator
 from pytrade.models.instruments import (
     MINUTES_MAP,
     CandleData,
