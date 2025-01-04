@@ -8,6 +8,7 @@ import pytest
 
 from pytrade.models.instruments import (
     MINUTES_MAP,
+    CandleData,
     Candlestick,
     CandleSubscription,
     Granularity,
@@ -92,8 +93,9 @@ class _TestStrategy(FxStrategy):
 
 def test_monitor_instruments():
     broker = MagicMock()
+    data_context = CandleData()
 
-    strategy = _TestStrategy(broker)
+    strategy = _TestStrategy(broker, data_context)
     strategy.init()
 
     subscribe_calls = [
@@ -106,8 +108,9 @@ def test_monitor_instruments():
 
 def test_instrument_updates():
     broker = MagicMock()
+    data_context = CandleData()
 
-    strategy = _TestStrategy(broker)
+    strategy = _TestStrategy(broker, data_context)
     with patch.object(strategy, "_updates_complete", MagicMock()) as mock_updates_event:
         strategy.init()
 
@@ -122,8 +125,9 @@ def test_instrument_updates():
 @pytest.mark.asyncio
 async def test_strategy_next():
     broker = MagicMock()
+    data_context = CandleData()
 
-    strategy = _TestStrategy(broker)
+    strategy = _TestStrategy(broker, data_context)
     with patch.object(strategy, "_next", MagicMock()) as mock_next:
         strategy.init()
 
@@ -139,8 +143,9 @@ async def test_strategy_next():
 @pytest.mark.asyncio
 async def test_strategy_waits_for_updates():
     broker = MagicMock()
+    data_context = CandleData()
 
-    strategy = _TestStrategy(broker)
+    strategy = _TestStrategy(broker, data_context)
     iterations = 2
     with patch.object(strategy, "_next", MagicMock()) as mock_next:
         strategy.init()

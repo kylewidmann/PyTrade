@@ -42,7 +42,7 @@ RUN apt-get update \
     curl \
     build-essential
 
-ENV PATH="/app/${PROJECT_DIR}/.venv/bin:$PATH"
+ENV PATH="/app/.venv/bin:$PATH"
 ENV APP_USER app
 ENV APP_GROUP app
 RUN groupadd  ${APP_GROUP}
@@ -55,7 +55,7 @@ COPY --from=base /app .
 WORKDIR /app/${PROJECT_DIR}
 USER ${APP_USER}
 
-ENTRYPOINT ["/app/${PROJECT_DIR}/scripts/entrypoint.sh"]
+ENTRYPOINT ["/app/scripts/entrypoint.sh"]
 
 ##################################################
 ## DEVELOPMENT ##
@@ -63,7 +63,7 @@ ENTRYPOINT ["/app/${PROJECT_DIR}/scripts/entrypoint.sh"]
 
 FROM base as development
 
-ENV PATH="/app/${PROJECT_DIR}/.venv/bin:$PATH"
+ENV PATH="/app/.venv/bin:$PATH"
 ENV APP_USER app
 ENV APP_GROUP app
 RUN groupadd  ${APP_GROUP}
@@ -81,4 +81,4 @@ RUN poetry install
 RUN chown ${APP_USER}:${APP_GROUP} .
 USER ${APP_USER}
 
-ENTRYPOINT ["/app/${PROJECT_DIR}/scripts/entrypoint.sh"]
+ENTRYPOINT ["/app/scripts/entrypoint.sh"]

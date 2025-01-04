@@ -33,31 +33,31 @@ def get_candles(
 
 class BoolIndicator(Indicator):
 
-    def _run(self):
+    def _run(self, *args, **kwargs):
         return self._data.Open.astype(bool)
 
 
 class SquareIndicator(Indicator):
 
-    def _run(self):
+    def _run(self, *args, **kwargs):
         return self._data.Open**2
 
 
 class StaticIndicator(Indicator):
 
-    def _run(self):
+    def _run(self, *args, **kwargs):
         return self._data.Open
 
 
 class AddIndicator(Indicator):
 
-    def _run(self):
+    def _run(self, *args, **kwargs):
         return self._data.Open + 1
 
 
 class SubtractIndicator(Indicator):
 
-    def _run(self):
+    def _run(self, *args, **kwargs):
         return self._data.Open - 1
 
 

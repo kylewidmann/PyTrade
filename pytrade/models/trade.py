@@ -5,7 +5,7 @@ from typing import Optional, Union
 import numpy as np
 import pandas as pd
 
-from pytrade.models.order import Order
+import pytrade.models.order as order
 
 
 class Trade:
@@ -22,8 +22,8 @@ class Trade:
         self.__exit_bar: Optional[int] = None
         self.__entry_time = None
         self.__exit_time = None
-        self.__sl_order: Optional["Order"] = None
-        self.__tp_order: Optional["Order"] = None
+        self.__sl_order: Optional["order.Order"] = None
+        self.__tp_order: Optional["order.Order"] = None
         self.__tag = tag
 
     def __repr__(self):
@@ -49,7 +49,7 @@ class Trade:
             )
 
         size = copysign(max(1, round(abs(self.__size) * portion)), -self.__size)
-        return Order(size, parent_trade=self, tag=self.__tag)
+        return order.Order(size, parent_trade=self, tag=self.__tag)
 
     # Fields getters
 
@@ -182,7 +182,7 @@ class Trade:
             raise RuntimeError(f"Invalid price ({price}) provided for trade.")
 
         attr = f"_{self.__class__.__qualname__}__{type}_order"
-        order: "Order" = getattr(self, attr)
+        order: "order.Order" = getattr(self, attr)
         if order:
             order.cancel()
         if price:
