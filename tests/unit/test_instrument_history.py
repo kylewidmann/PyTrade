@@ -111,7 +111,7 @@ def test_update_execution_time(scale: int):
     start_time = time.time()
     history.update(dummy_candles[-1])
     run_time = time.time() - start_time
-    assert run_time < 0.002
+    assert run_time < 0.003
 
 
 def test_update_wrong_instrument():

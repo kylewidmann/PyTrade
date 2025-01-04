@@ -188,9 +188,9 @@ class OrderRequest(dict):
         instrument: Instrument,
         units: int,
         time_in_force: TimeInForce,
-        take_profit_on_fill: Optional[float],
-        stop_loss_on_fill: Optional[float],
-        trailing_stop_loss_on_fill: Optional[float],
+        take_profit_on_fill: Optional[float] = None,
+        stop_loss_on_fill: Optional[float] = None,
+        trailing_stop_loss_on_fill: Optional[float] = None,
     ):
         # super().__init__(
         #     instrument=instrument,
