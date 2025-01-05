@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "fx-lib"
+name = "pytrade"
 version = "0.1.0"
 description = ""
 authors = ["Kyle Widmann <Kyle.Widmann@gmail.com>"]
@@ -11,6 +11,8 @@ pytest = "^8.1.1"
 numpy = "^1.26.4"
 pandas = "^2.2.2"
 pandas-stubs = "^2.2.2.240603"
+backtesting = "^0.3.3"
+multimethod = "^1.12"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -21,6 +23,8 @@ flake8 = "^7.0.0"
 black = "^24.3.0"
 isort = "^5.13.2"
 mypy = "^1.9.0"
+pytest-benchmark = "^4.0.0"
+pytest-asyncio = "^0.23.7"
 
 [build-system]
 requires = ["poetry-core"]
@@ -48,7 +52,7 @@ exclude_also = [
     "@(abc\\.)?abstractmethod",
 ]
 omit = [
-    "fx_lib/interfaces/*",
-    "fx_lib/models/*"
+    "pytrade/interfaces/*",
+    "pytrade/models/*"
 ]
 
