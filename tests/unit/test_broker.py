@@ -22,7 +22,9 @@ def test_sell_order():
 
     assert len(broker._pending_orders) == 0
 
-    broker.order(OrderRequest(FxInstrument.GBPUSD, -10, TimeInForce.GOOD_TILL_CANCELLED))
+    broker.order(
+        OrderRequest(FxInstrument.GBPUSD, -10, TimeInForce.GOOD_TILL_CANCELLED)
+    )
 
     assert len(broker._pending_orders) == 1
 

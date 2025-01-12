@@ -25,7 +25,7 @@ MINUTES_MAP = {
     Granularity.M15: 15,
     Granularity.H1: 60,
     Granularity.H4: 240,
-    Granularity.D1: 1440
+    Granularity.D1: 1440,
 }
 
 

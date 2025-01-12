@@ -7,8 +7,8 @@ from pytrade.models.indicator import Indicator
 from pytrade.models.instruments import (
     MINUTES_MAP,
     Candlestick,
-    Granularity,
     FxInstrument,
+    Granularity,
     InstrumentCandles,
 )
 

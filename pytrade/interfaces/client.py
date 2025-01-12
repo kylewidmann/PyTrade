@@ -3,7 +3,7 @@ from typing import Callable
 
 from multimethod import multimethod
 
-from pytrade.models.instruments import Candlestick, Granularity, FxInstrument
+from pytrade.models.instruments import Candlestick, FxInstrument, Granularity
 from pytrade.models.order import MarketOrderRequest
 
 

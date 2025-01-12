@@ -11,8 +11,8 @@ from pytrade.models.instruments import (
     CandleData,
     Candlestick,
     CandleSubscription,
-    Granularity,
     FxInstrument,
+    Granularity,
 )
 from pytrade.strategy import FxStrategy
 

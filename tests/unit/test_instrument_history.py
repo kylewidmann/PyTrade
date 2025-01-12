@@ -10,8 +10,8 @@ from pytrade.models.instruments import (
     INDEX,
     MINUTES_MAP,
     Candlestick,
-    Granularity,
     FxInstrument,
+    Granularity,
     InstrumentCandles,
 )
 

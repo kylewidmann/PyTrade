@@ -2,7 +2,7 @@ from typing import Callable, List
 
 from pytrade.interfaces.broker import IBroker
 from pytrade.interfaces.client import IClient
-from pytrade.models.instruments import Candlestick, Granularity, FxInstrument
+from pytrade.models.instruments import Candlestick, FxInstrument, Granularity
 from pytrade.models.order import OrderRequest
 
 

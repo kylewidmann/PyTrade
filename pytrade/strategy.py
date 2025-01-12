@@ -7,8 +7,8 @@ from pytrade.models.instruments import (
     CandleData,
     Candlestick,
     CandleSubscription,
-    Granularity,
     FxInstrument,
+    Granularity,
     InstrumentCandles,
 )
 
