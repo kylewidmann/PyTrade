@@ -8,7 +8,7 @@ from pytrade.models.instruments import (
     Candlestick,
     CandleSubscription,
     Granularity,
-    Instrument,
+    FxInstrument,
     InstrumentCandles,
 )
 
@@ -74,7 +74,7 @@ class FxStrategy:
         self._pending_updates = self._required_updates.copy()
 
     def get_data(
-        self, instrument: Instrument, granularity: Granularity
+        self, instrument: FxInstrument, granularity: Granularity
     ) -> InstrumentCandles:
         return self._data_context.get(instrument, granularity)
 

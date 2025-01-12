@@ -11,7 +11,7 @@ from pytrade.models.instruments import (
     MINUTES_MAP,
     Candlestick,
     Granularity,
-    Instrument,
+    FxInstrument,
     InstrumentCandles,
 )
 
@@ -21,7 +21,7 @@ def get_candles(count: int, granularity: Granularity):
     _delta = MINUTES_MAP[granularity]
     return [
         Candlestick(
-            Instrument.EURUSD,
+            FxInstrument.EURUSD,
             granularity,
             random.uniform(0, 10),
             random.uniform(0, 10),
@@ -121,7 +121,7 @@ def test_update_wrong_instrument():
         history = InstrumentCandles(max_size=10)
         first_candle = dummy_candles[0]
         second_candle = dummy_candles[1]
-        second_candle.instrument = Instrument.GBPUSD
+        second_candle.instrument = FxInstrument.GBPUSD
 
         assert first_candle.instrument != second_candle.instrument
 

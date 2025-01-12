@@ -8,13 +8,13 @@ from pytrade.models.instruments import (
     MINUTES_MAP,
     Candlestick,
     Granularity,
-    Instrument,
+    FxInstrument,
     InstrumentCandles,
 )
 
 
 def get_candles(
-    count: int, instrument: Instrument, granularity: Granularity, end_time: datetime
+    count: int, instrument: FxInstrument, granularity: Granularity, end_time: datetime
 ) -> list[Candlestick]:
     _delta = MINUTES_MAP[granularity]
     return [
@@ -65,7 +65,7 @@ def test_update():
     test_series = pd.Series([0, 1, 0, 0, 1])
     data = InstrumentCandles()
     candles = get_candles(
-        len(test_series), Instrument.EURUSD, Granularity.M1, datetime.now()
+        len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now()
     )
     indicator = BoolIndicator(data)
     for idx, candle in enumerate(candles):
@@ -82,7 +82,7 @@ def test_primitive_equality():
     test_series = pd.Series([0, 1, 2, 3, 4])
     data = InstrumentCandles()
     candles = get_candles(
-        len(test_series), Instrument.EURUSD, Granularity.M1, datetime.now()
+        len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now()
     )
     indicator = SquareIndicator(data)
     for idx, candle in enumerate(candles):
@@ -99,7 +99,7 @@ def test_primitive_greater():
     test_series = pd.Series([0, 1, 2, 3, 4])
     data = InstrumentCandles()
     candles = get_candles(
-        len(test_series), Instrument.EURUSD, Granularity.M1, datetime.now()
+        len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now()
     )
     indicator = StaticIndicator(data)
     for idx, candle in enumerate(candles):
@@ -116,7 +116,7 @@ def test_primitive_less():
     test_series = pd.Series([0, 1, 2, 3, 4])
     data = InstrumentCandles()
     candles = get_candles(
-        len(test_series), Instrument.EURUSD, Granularity.M1, datetime.now()
+        len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now()
     )
     indicator = StaticIndicator(data)
     for idx, candle in enumerate(candles):
@@ -133,7 +133,7 @@ def test_indicator_equality():
     test_series = pd.Series([0, 1, 2, 3, 4])
     data = InstrumentCandles()
     candles = get_candles(
-        len(test_series), Instrument.EURUSD, Granularity.M1, datetime.now()
+        len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now()
     )
     indicator = StaticIndicator(data)
     indicator2 = StaticIndicator(data)
@@ -153,7 +153,7 @@ def test_indicator_greater():
     test_series = pd.Series([0, 1, 2, 3, 4])
     data = InstrumentCandles()
     candles = get_candles(
-        len(test_series), Instrument.EURUSD, Granularity.M1, datetime.now()
+        len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now()
     )
     indicator = StaticIndicator(data)
     indicator2 = SubtractIndicator(data)
@@ -173,7 +173,7 @@ def test_indicator_less():
     test_series = pd.Series([0, 1, 2, 3, 4])
     data = InstrumentCandles()
     candles = get_candles(
-        len(test_series), Instrument.EURUSD, Granularity.M1, datetime.now()
+        len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now()
     )
     indicator = StaticIndicator(data)
     indicator2 = AddIndicator(data)

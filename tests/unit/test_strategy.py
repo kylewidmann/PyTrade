@@ -12,31 +12,31 @@ from pytrade.models.instruments import (
     Candlestick,
     CandleSubscription,
     Granularity,
-    Instrument,
+    FxInstrument,
 )
 from pytrade.strategy import FxStrategy
 
 TEST_SUBCRIPTIONS = [
-    CandleSubscription(Instrument.EURUSD, Granularity.M5),
-    CandleSubscription(Instrument.EURUSD, Granularity.M15),
-    CandleSubscription(Instrument.GBPUSD, Granularity.M5),
-    CandleSubscription(Instrument.GBPUSD, Granularity.M15),
+    CandleSubscription(FxInstrument.EURUSD, Granularity.M5),
+    CandleSubscription(FxInstrument.EURUSD, Granularity.M15),
+    CandleSubscription(FxInstrument.GBPUSD, Granularity.M5),
+    CandleSubscription(FxInstrument.GBPUSD, Granularity.M15),
 ]
 
 TEST_UPDATES = [
-    CandleSubscription(Instrument.EURUSD, Granularity.M5),
-    CandleSubscription(Instrument.EURUSD, Granularity.M5),
-    CandleSubscription(Instrument.EURUSD, Granularity.M5),
-    CandleSubscription(Instrument.EURUSD, Granularity.M15),
-    CandleSubscription(Instrument.GBPUSD, Granularity.M5),
-    CandleSubscription(Instrument.GBPUSD, Granularity.M5),
-    CandleSubscription(Instrument.GBPUSD, Granularity.M5),
-    CandleSubscription(Instrument.GBPUSD, Granularity.M15),
+    CandleSubscription(FxInstrument.EURUSD, Granularity.M5),
+    CandleSubscription(FxInstrument.EURUSD, Granularity.M5),
+    CandleSubscription(FxInstrument.EURUSD, Granularity.M5),
+    CandleSubscription(FxInstrument.EURUSD, Granularity.M15),
+    CandleSubscription(FxInstrument.GBPUSD, Granularity.M5),
+    CandleSubscription(FxInstrument.GBPUSD, Granularity.M5),
+    CandleSubscription(FxInstrument.GBPUSD, Granularity.M5),
+    CandleSubscription(FxInstrument.GBPUSD, Granularity.M15),
 ]
 
 
 def get_candles(
-    count: int, instrument: Instrument, granularity: Granularity, end_time: datetime
+    count: int, instrument: FxInstrument, granularity: Granularity, end_time: datetime
 ) -> list[Candlestick]:
     _delta = MINUTES_MAP[granularity]
     return [

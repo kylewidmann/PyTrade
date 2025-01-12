@@ -16,6 +16,7 @@ class Granularity(Enum):
     M15 = "M15"
     H1 = "H1"
     H4 = "H4"
+    D1 = "D1"
 
 
 MINUTES_MAP = {
@@ -24,10 +25,11 @@ MINUTES_MAP = {
     Granularity.M15: 15,
     Granularity.H1: 60,
     Granularity.H4: 240,
+    Granularity.D1: 1440
 }
 
 
-class Instrument(Enum):
+class FxInstrument(Enum):
     AUDJPY = "AUD/JPY"
     AUDNZD = "AUD/NZD"
     AUDUSD = "AUD/USD"
@@ -50,12 +52,12 @@ class Instrument(Enum):
     USDZAR = "USD/ZAR"
 
 
-instrument_lookup = {m.value: m for m in Instrument}
+instrument_lookup = {m.value: m for m in FxInstrument}
 
 
 class CandleSubscription:
 
-    def __init__(self, instrument: Instrument, granularity: Granularity):
+    def __init__(self, instrument: FxInstrument, granularity: Granularity):
         self._instrument = instrument
         self._granularity = granularity
 
@@ -64,7 +66,7 @@ class CandleSubscription:
         return self._granularity
 
     @property
-    def instrument(self) -> Instrument:
+    def instrument(self) -> FxInstrument:
         return self._instrument
 
     def __hash__(self):
@@ -96,7 +98,7 @@ class Candlestick:
 
     def __init__(
         self,
-        instrument: Instrument,
+        instrument: FxInstrument,
         granularity: Granularity,
         open: float,
         high: float,
@@ -125,7 +127,7 @@ class Candlestick:
 
 class TickData:
 
-    instrument: Instrument
+    instrument: FxInstrument
     timestamp: datetime
     bid: float
     ask: float
@@ -161,7 +163,7 @@ class InstrumentCandles(IInstrumentData):
                     "Dataframe does not have a datetime index and does not have a 'Timestamp' column"
                 )
         self._max_size: Optional[int] = max_size
-        self.__instrument: Optional[Instrument] = None
+        self.__instrument: Optional[FxInstrument] = None
         self.__granularity: Optional[Granularity] = None
         self.__update_event = Event()
 
@@ -216,7 +218,7 @@ class InstrumentCandles(IInstrumentData):
 class CandleData:
 
     def __init__(self, max_size=1000):
-        self._data: dict[tuple[Instrument, Granularity], InstrumentCandles] = {}
+        self._data: dict[tuple[FxInstrument, Granularity], InstrumentCandles] = {}
         self._max_size = max_size
 
     def __new__(cls, *args, **kwargs):
@@ -225,7 +227,7 @@ class CandleData:
         # Need to handle case where instantiatied and different max size is provided
         return cls.instance
 
-    def get(self, instrument: Instrument, granularity: Granularity):
+    def get(self, instrument: FxInstrument, granularity: Granularity):
         key = (instrument, granularity)
         instrument_candles: InstrumentCandles = self._data.get(
             (instrument, granularity), InstrumentCandles(max_size=self._max_size)

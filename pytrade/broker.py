@@ -2,7 +2,7 @@ from typing import Callable, List
 
 from pytrade.interfaces.broker import IBroker
 from pytrade.interfaces.client import IClient
-from pytrade.models.instruments import Candlestick, Granularity, Instrument
+from pytrade.models.instruments import Candlestick, Granularity, FxInstrument
 from pytrade.models.order import OrderRequest
 
 
@@ -35,7 +35,7 @@ class FxBroker(IBroker):
 
     def subscribe(
         self,
-        instrument: Instrument,
+        instrument: FxInstrument,
         granularity: Granularity,
         callback: Callable[[Candlestick], None],
     ):

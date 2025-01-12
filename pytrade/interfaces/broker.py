@@ -1,7 +1,7 @@
 import abc
 from typing import Callable
 
-from pytrade.models.instruments import Candlestick, Granularity, Instrument
+from pytrade.models.instruments import Candlestick, Granularity, FxInstrument
 from pytrade.models.order import OrderRequest
 
 
@@ -38,7 +38,7 @@ class IBroker(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def subscribe(
         self,
-        instrument: Instrument,
+        instrument: FxInstrument,
         granularity: Granularity,
         callback: Callable[[Candlestick], None],
     ):
