@@ -3,7 +3,7 @@ from typing import Callable
 
 from multimethod import multimethod
 
-from pytrade.models.instruments import Candlestick, Granularity, Instrument
+from pytrade.models.instruments import Candlestick, FxInstrument, Granularity
 from pytrade.models.order import MarketOrderRequest
 
 
@@ -29,20 +29,20 @@ class IClient:
 
     @abc.abstractmethod
     def get_candles(
-        self, instrument: Instrument, granularity: Granularity, count: int
+        self, instrument: FxInstrument, granularity: Granularity, count: int
     ) -> list[Candlestick]:
         raise NotImplementedError()
 
     @abc.abstractmethod
     def get_candle(
-        self, instrument: Instrument, granularity: Granularity
+        self, instrument: FxInstrument, granularity: Granularity
     ) -> Candlestick:
         raise NotImplementedError()
 
     @abc.abstractmethod
     def subscribe(
         self,
-        instrument: Instrument,
+        instrument: FxInstrument,
         granularity: Granularity,
         callback: Callable[[Candlestick], None],
     ):

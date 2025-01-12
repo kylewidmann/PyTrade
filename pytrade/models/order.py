@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional
 
-from pytrade.models.instruments import Instrument
+from pytrade.models.instruments import FxInstrument
 from pytrade.models.trade import Trade
 
 
@@ -185,7 +185,7 @@ class OrderRequest(dict):
 
     def __init__(
         self,
-        instrument: Instrument,
+        instrument: FxInstrument,
         units: int,
         time_in_force: TimeInForce,
         take_profit_on_fill: Optional[float] = None,
@@ -201,7 +201,7 @@ class OrderRequest(dict):
         #     stop_loss_on_fill=stop_loss_on_fill,
         #     trailing_stop_loss_on_fill=trailing_stop_loss_on_fill
         # )
-        self._instrument: Instrument = instrument
+        self._instrument: FxInstrument = instrument
         self._units: int = units
         self._time_in_force: Optional[TimeInForce] = time_in_force
         self._take_profit_on_fill: Optional[float] = take_profit_on_fill
@@ -209,7 +209,7 @@ class OrderRequest(dict):
         self._trailing_stop_loss_on_fill: Optional[float] = trailing_stop_loss_on_fill
 
     @property
-    def instrument(self) -> Instrument:
+    def instrument(self) -> FxInstrument:
         return self._instrument
 
     @property
@@ -241,7 +241,7 @@ class MarketOrderRequest(OrderRequest):
 
     def __init__(
         self,
-        instrument: Instrument,
+        instrument: FxInstrument,
         units: int,
         time_in_force: TimeInForce = TimeInForce.FILL_OR_KILL,
         take_profit_on_fill: Optional[float] = None,
@@ -272,7 +272,7 @@ class LimitOrderRequest(OrderRequest):
 
     def __init__(
         self,
-        instrument: Instrument,
+        instrument: FxInstrument,
         units: int,
         price: float,
         time_in_force: TimeInForce,
@@ -295,7 +295,7 @@ class StopOrderRequest(OrderRequest):
 
     def __init__(
         self,
-        instrument: Instrument,
+        instrument: FxInstrument,
         units: int,
         price: float,
         time_in_force: TimeInForce,
