@@ -57,7 +57,7 @@ instrument_lookup = {m.value: m for m in FxInstrument}
 
 class CandleSubscription:
 
-    def __init__(self, instrument: FxInstrument, granularity: Granularity):
+    def __init__(self, instrument: FxInstrument | str, granularity: Granularity):
         self._instrument = instrument
         self._granularity = granularity
 
@@ -66,7 +66,7 @@ class CandleSubscription:
         return self._granularity
 
     @property
-    def instrument(self) -> FxInstrument:
+    def instrument(self) -> FxInstrument | str:
         return self._instrument
 
     def __hash__(self):
