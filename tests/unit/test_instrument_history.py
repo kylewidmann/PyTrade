@@ -5,14 +5,12 @@ from datetime import datetime, timedelta
 import pandas as pd
 import pytest
 
+from pytrade.data import COLUMNS, INDEX, InstrumentCandles
 from pytrade.models.instruments import (
-    COLUMNS,
-    INDEX,
     MINUTES_MAP,
     Candlestick,
     FxInstrument,
     Granularity,
-    InstrumentCandles,
 )
 
 

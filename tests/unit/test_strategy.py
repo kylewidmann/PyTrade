@@ -6,9 +6,9 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 
+from pytrade.data import CandleData
 from pytrade.models.instruments import (
     MINUTES_MAP,
-    CandleData,
     Candlestick,
     CandleSubscription,
     FxInstrument,
@@ -73,7 +73,7 @@ def send_strategy_updates(strategy: FxStrategy):
 
     updates = TEST_UPDATES.copy()
     for candle in update_candles:
-        strategy._update_instrument(candle)
+        strategy._handle_update(candle.instrument, candle.granularity)
         updates.remove(CandleSubscription(candle.instrument, candle.granularity))
         assert len(strategy._pending_updates) == len(updates)
 
@@ -93,15 +93,13 @@ class _TestStrategy(FxStrategy):
 
 def test_monitor_instruments():
     broker = MagicMock()
+    broker.subscribe.side_effect = MagicMock()
     data_context = CandleData()
 
     strategy = _TestStrategy(broker, data_context)
     strategy.init()
 
-    subscribe_calls = [
-        call(s.instrument, s.granularity, strategy._update_instrument)
-        for s in TEST_SUBCRIPTIONS
-    ]
+    subscribe_calls = [call(s.instrument, s.granularity) for s in TEST_SUBCRIPTIONS]
 
     broker.subscribe.assert_has_calls(subscribe_calls)
 

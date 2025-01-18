@@ -2,20 +2,20 @@ import asyncio
 from abc import abstractmethod
 
 from pytrade.interfaces.broker import IBroker
+from pytrade.interfaces.data import IDataContext, IInstrumentData
 from pytrade.models.instruments import (
     MINUTES_MAP,
-    CandleData,
-    Candlestick,
     CandleSubscription,
     FxInstrument,
     Granularity,
-    InstrumentCandles,
+    Instrument,
 )
+from pytrade.models.order import OrderRequest, TimeInForce
 
 
 class FxStrategy:
 
-    def __init__(self, broker: IBroker, data_context: CandleData):
+    def __init__(self, broker: IBroker, data_context: IDataContext):
         self.broker = broker
         self._updates_complete = asyncio.Event()
         self._data_context = data_context
@@ -53,17 +53,15 @@ class FxStrategy:
 
     def _monitor_instruments(self) -> None:
         for subscription in self.subscriptions:
-            self.broker.subscribe(
-                subscription.instrument,
-                subscription.granularity,
-                self._update_instrument,
+            instrument_data = self.broker.subscribe(
+                subscription.instrument, subscription.granularity
+            )
+            instrument_data.on_update += lambda: self._handle_update(
+                subscription.instrument, subscription.granularity
             )
 
-    def _update_instrument(self, candle: Candlestick) -> None:
-        self._data_context.update(candle)
-        self._pending_updates.remove(
-            CandleSubscription(candle.instrument, candle.granularity)
-        )
+    def _handle_update(self, instrument: Instrument, granularity: Granularity) -> None:
+        self._pending_updates.remove(CandleSubscription(instrument, granularity))
         # Filter out update from pending
         if not self._pending_updates:
             self._updates_complete.set()
@@ -75,7 +73,7 @@ class FxStrategy:
 
     def get_data(
         self, instrument: FxInstrument, granularity: Granularity
-    ) -> InstrumentCandles:
+    ) -> IInstrumentData:
         return self._data_context.get(instrument, granularity)
 
     @abstractmethod
@@ -92,8 +90,22 @@ class FxStrategy:
         """
         raise NotImplementedError()
 
-    def buy(self, size, tp=None, sl=None) -> None:
-        pass
+    def buy(
+        self,
+        instrument: Instrument,
+        size,
+        time_in_force: TimeInForce = TimeInForce.GOOD_TILL_CANCELLED,
+        tp=None,
+        sl=None,
+    ) -> None:
+        self.broker.order(OrderRequest(instrument, size, time_in_force, tp, sl))
 
-    def sell(self, size, tp=None, sl=None) -> None:
-        pass
+    def sell(
+        self,
+        instrument: Instrument,
+        size,
+        time_in_force: TimeInForce = TimeInForce.GOOD_TILL_CANCELLED,
+        tp=None,
+        sl=None,
+    ) -> None:
+        self.buy(instrument, -size, time_in_force, tp, sl)

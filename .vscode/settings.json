@@ -1,6 +1,6 @@
 {
-    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-    "python.testing.unittestArgs": [
+    "python.defaultInterpreterPath": ".venv/bin/python",
+    "python.testing.pytestArgs": [
         "-v",
         "tests/test_*.py"
     ],

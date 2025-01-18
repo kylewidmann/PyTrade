@@ -1,7 +1,7 @@
 from typing import Callable
 
 
-class Event:
+class Event: # pragma: no cover
 
     def __init__(self):
         self.__callbacks: list[Callable[[], None]] = []
