@@ -2,6 +2,7 @@ from abc import abstractmethod
 
 import pandas as pd
 
+from pandas import Timestamp
 from pytrade.events.event import Event
 from pytrade.models.instruments import Granularity, Instrument
 
@@ -34,7 +35,7 @@ class IInstrumentData:
         raise NotImplementedError()
 
     @property
-    def timestamp(self):
+    def timestamp(self) -> Timestamp:
         raise NotImplementedError()
 
     @property

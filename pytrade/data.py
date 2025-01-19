@@ -3,6 +3,7 @@ from typing import Optional
 
 import pandas as pd
 
+from pandas import Timestamp
 from pytrade.events.typed_event import TypedEvent
 from pytrade.interfaces.data import IDataContext, IInstrumentData
 from pytrade.models.instruments import Candlestick, Granularity, Instrument
@@ -47,6 +48,10 @@ class InstrumentCandles(IInstrumentData):
     @property
     def on_update(self):
         return self.__update_event
+    
+    @property
+    def timestamp(self) -> Timestamp:
+        return self._data.index[-1]
 
     @on_update.setter
     def on_update(self, value: TypedEvent[IInstrumentData]):
