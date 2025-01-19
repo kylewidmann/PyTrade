@@ -1,9 +1,6 @@
 from typing import Callable, Generic, TypeVar
 
-from pytrade.models.instruments import Candlestick
-
 T = TypeVar("T")
-
 
 class TypedEvent(Generic[T]):
 
@@ -25,7 +22,3 @@ class TypedEvent(Generic[T]):
     def __call__(self, *args, **kwargs):
         for callback in self._callbacks:
             callback(*args, **kwargs)
-
-
-class CandlestickEvent(TypedEvent[Candlestick]):
-    pass
