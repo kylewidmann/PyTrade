@@ -2,9 +2,9 @@ from datetime import timedelta
 from typing import Optional
 
 import pandas as pd
-
 from pandas import Timestamp
-from pytrade.events.typed_event import TypedEvent
+
+from pytrade.events.event import Event
 from pytrade.interfaces.data import IDataContext, IInstrumentData
 from pytrade.models.instruments import Candlestick, Granularity, Instrument
 
@@ -31,7 +31,7 @@ class InstrumentCandles(IInstrumentData):
         self._max_size: Optional[int] = max_size
         self.__instrument: Optional[Instrument] = None
         self.__granularity: Optional[Granularity] = None
-        self.__update_event = TypedEvent[IInstrumentData]()
+        self.__update_event = Event()
 
     @property
     def df(self):
@@ -46,15 +46,15 @@ class InstrumentCandles(IInstrumentData):
         return self.__granularity
 
     @property
-    def on_update(self):
-        return self.__update_event
-    
-    @property
     def timestamp(self) -> Timestamp:
         return self._data.index[-1]
 
+    @property
+    def on_update(self):
+        return self.__update_event
+
     @on_update.setter
-    def on_update(self, value: TypedEvent[IInstrumentData]):
+    def on_update(self, value: Event):
         self.__update_event = value
 
     def update(self, candlestick: Candlestick):

@@ -1,12 +1,10 @@
-import asyncio
 import random
 from datetime import datetime, timedelta
-from tracemalloc import start
 from typing import List
 from unittest.mock import MagicMock, call, patch
 
-from pandas import Timestamp
 import pytest
+from pandas import Timestamp
 
 from pytrade.data import CandleData
 from pytrade.models.instruments import (
@@ -69,7 +67,7 @@ def get_updates(freq: str):
 def send_strategy_updates(strategy: FxStrategy):
     update_candles = get_updates(strategy._update_frequency)
     mock_instrument_data = MagicMock()
-    
+
     for candle in update_candles:
         mock_instrument_data.instrument = candle.instrument
         mock_instrument_data.granularity = candle.granularity

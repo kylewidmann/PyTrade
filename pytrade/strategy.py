@@ -3,6 +3,7 @@ from abc import abstractmethod
 from datetime import timedelta
 
 from pandas import Timestamp
+
 from pytrade.interfaces.broker import IBroker
 from pytrade.interfaces.data import IDataContext, IInstrumentData
 from pytrade.models.instruments import (
@@ -36,15 +37,14 @@ class FxStrategy:
         for subscription in self.subscriptions:
             if MINUTES_MAP[subscription.granularity] > max_interval:
                 _max_granularity = subscription.granularity
-            
-            self._required_updates.append(subscription)
 
+            self._required_updates.append(subscription)
 
         if _max_granularity:
             self._update_frequency = UPDATE_MAP[_max_granularity]
         else:
             raise RuntimeError("Can not determine update frequency for strategy.")
-        
+
         self._pending_updates = self._required_updates.copy()
         # Just set to min and let the first update set it correctly
         self._next_timestamp = Timestamp.min
@@ -75,8 +75,10 @@ class FxStrategy:
             self._pending_updates = self._required_updates.copy()
 
         if data.timestamp == self._next_timestamp:
-            self._pending_updates.remove(CandleSubscription(data.instrument, data.granularity))
-        
+            self._pending_updates.remove(
+                CandleSubscription(data.instrument, data.granularity)
+            )
+
         # Filter out update from pending
         if not self._pending_updates:
             self._updates_complete.set()

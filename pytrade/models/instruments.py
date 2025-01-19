@@ -35,6 +35,7 @@ UPDATE_MAP = {
     Granularity.D1: "24h",
 }
 
+
 class FxInstrument(Enum):
     AUDJPY = "AUD/JPY"
     AUDNZD = "AUD/NZD"
@@ -92,25 +93,20 @@ class CandleSubscription:
             and self.granularity.value < other.granularity.value
         )
 
-    def __eq__(self, other: "CandleSubscription"):
-        result =  (
-            isinstance(other, CandleSubscription)
-            and self.__instrument_eq__(other)
-        )
+    def __eq__(self, other: Any):
+        result = isinstance(other, CandleSubscription) and self.__instrument_eq__(other)
 
         return result
-    
+
     def __instrument_eq__(self, other: "CandleSubscription"):
         result = (
-            (
-                isinstance(other.instrument, FxInstrument)
-                and isinstance(self.instrument, FxInstrument)
-                and self.instrument.value == other.instrument.value
-            ) or (
-                isinstance(other.instrument, str)
-                and isinstance(self.instrument, str)
-                and self.instrument == other.instrument
-            )
+            isinstance(other.instrument, FxInstrument)
+            and isinstance(self.instrument, FxInstrument)
+            and self.instrument.value == other.instrument.value
+        ) or (
+            isinstance(other.instrument, str)
+            and isinstance(self.instrument, str)
+            and self.instrument == other.instrument
         )
 
         return result

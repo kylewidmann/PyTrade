@@ -36,7 +36,7 @@ lint-local: bandit-local black-local flake8-local isort-local mypy-local
 .PHONY: clean-imports
 clean-imports: ##@local Remove unused imports
 clean-imports: 
-	autoflake --in-place --remove-all-unused-imports --recursive pytrade
+	autoflake --in-place --remove-all-unused-imports --recursive pytrade tests
 
 .PHONY: reformat
 reformat: ##@local Reformat module
