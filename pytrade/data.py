@@ -5,8 +5,8 @@ import pandas as pd
 from pandas import Timestamp
 
 from pytrade.events.event import Event
+from pytrade.instruments import Candlestick, Granularity, Instrument
 from pytrade.interfaces.data import IDataContext, IInstrumentData
-from pytrade.models.instruments import Candlestick, Granularity, Instrument
 
 COLUMNS = ["Timestamp", "Instrument", "Open", "High", "Low", "Close"]
 

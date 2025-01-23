@@ -1,12 +1,11 @@
 import asyncio
 from abc import abstractmethod
 from datetime import timedelta
+from typing import Optional
 
 from pandas import Timestamp
 
-from pytrade.interfaces.broker import IBroker
-from pytrade.interfaces.data import IDataContext, IInstrumentData
-from pytrade.models.instruments import (
+from pytrade.instruments import (
     MINUTES_MAP,
     UPDATE_MAP,
     CandleSubscription,
@@ -14,7 +13,9 @@ from pytrade.models.instruments import (
     Granularity,
     Instrument,
 )
-from pytrade.models.order import OrderRequest, TimeInForce
+from pytrade.interfaces.broker import IBroker
+from pytrade.interfaces.data import IDataContext, IInstrumentData
+from pytrade.models import Order, TimeInForce
 
 
 class FxStrategy:
@@ -113,18 +114,32 @@ class FxStrategy:
         self,
         instrument: Instrument,
         size,
+        stop: Optional[float] = None,
+        limit: Optional[float] = None,
         time_in_force: TimeInForce = TimeInForce.GOOD_TILL_CANCELLED,
         tp=None,
         sl=None,
     ) -> None:
-        self.broker.order(OrderRequest(instrument, size, time_in_force, tp, sl))
+        self.broker.order(
+            Order(
+                instrument,
+                size,
+                stop,
+                limit,
+                time_in_force=time_in_force,
+                take_profit_on_fill=tp,
+                stop_loss_on_fill=sl,
+            )
+        )
 
     def sell(
         self,
         instrument: Instrument,
         size,
+        stop: Optional[float] = None,
+        limit: Optional[float] = None,
         time_in_force: TimeInForce = TimeInForce.GOOD_TILL_CANCELLED,
         tp=None,
         sl=None,
     ) -> None:
-        self.buy(instrument, -size, time_in_force, tp, sl)
+        self.buy(instrument, -size, stop, limit, time_in_force, tp, sl)

@@ -1,16 +1,16 @@
 from typing import List
 
+from pytrade.instruments import Granularity, Instrument
 from pytrade.interfaces.broker import IBroker
 from pytrade.interfaces.client import IClient
-from pytrade.models.instruments import Granularity, Instrument
-from pytrade.models.order import OrderRequest
+from pytrade.models import Order
 
 
 class Broker(IBroker):
 
     def __init__(self, client: IClient):
         self.client = client
-        self._orders: List[OrderRequest] = []
+        self._orders: List[Order] = []
 
     @property
     def equity(self) -> float:
@@ -20,7 +20,7 @@ class Broker(IBroker):
     def margin_available(self) -> float:
         raise NotImplementedError
 
-    def order(self, order: OrderRequest):
+    def order(self, order: Order):
         self._orders.append(order)
 
     def process_orders(self):

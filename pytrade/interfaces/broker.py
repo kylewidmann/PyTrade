@@ -1,8 +1,8 @@
 import abc
 
+from pytrade.instruments import Granularity, Instrument
 from pytrade.interfaces.data import IInstrumentData
-from pytrade.models.instruments import Granularity, Instrument
-from pytrade.models.order import OrderRequest
+from pytrade.models import Order
 
 
 class IBroker(metaclass=abc.ABCMeta):
@@ -28,7 +28,7 @@ class IBroker(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def order(self, order: OrderRequest):
+    def order(self, order: Order):
         raise NotImplementedError()
 
     @abc.abstractmethod

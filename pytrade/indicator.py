@@ -21,7 +21,7 @@ class Indicator:
 
     @property
     def value(self):
-        return self._values[-1] if len(self._values) > 0 else None
+        return self._values.iloc[-1] if len(self._values) > 0 else None
 
     @property
     def to_array(self):

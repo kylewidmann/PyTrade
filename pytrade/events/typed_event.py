@@ -2,6 +2,7 @@ from typing import Callable, Generic, TypeVar
 
 T = TypeVar("T")
 
+
 class TypedEvent(Generic[T]):
 
     def __init__(self):

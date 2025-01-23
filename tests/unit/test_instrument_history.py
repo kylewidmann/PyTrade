@@ -6,12 +6,7 @@ import pandas as pd
 import pytest
 
 from pytrade.data import COLUMNS, INDEX, InstrumentCandles
-from pytrade.models.instruments import (
-    MINUTES_MAP,
-    Candlestick,
-    FxInstrument,
-    Granularity,
-)
+from pytrade.instruments import MINUTES_MAP, Candlestick, FxInstrument, Granularity
 
 
 def get_candles(count: int, granularity: Granularity):

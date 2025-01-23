@@ -7,7 +7,7 @@ import pytest
 from pandas import Timestamp
 
 from pytrade.data import CandleData
-from pytrade.models.instruments import (
+from pytrade.instruments import (
     MINUTES_MAP,
     Candlestick,
     CandleSubscription,

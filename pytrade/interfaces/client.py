@@ -1,10 +1,8 @@
 import abc
 from typing import Callable
 
-from multimethod import multimethod
-
-from pytrade.models.instruments import Candlestick, Granularity, Instrument
-from pytrade.models.order import MarketOrderRequest
+from pytrade.instruments import Candlestick, Granularity, Instrument
+from pytrade.models import Order
 
 
 class IClient:
@@ -23,8 +21,7 @@ class IClient:
         ) or NotImplemented
 
     @abc.abstractmethod
-    @multimethod
-    def order(self, order: MarketOrderRequest):
+    def order(self, order: Order):
         raise NotImplementedError()
 
     @abc.abstractmethod
