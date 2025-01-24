@@ -54,6 +54,6 @@ exclude_also = [
 ]
 omit = [
     "pytrade/interfaces/*",
-    "pytrade/models/*"
+    "pytrade/events/*"
 ]
 

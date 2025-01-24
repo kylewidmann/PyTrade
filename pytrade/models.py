@@ -47,6 +47,9 @@ class Order(dict):
     def __eq__(self, other: Any):
         return other is self
 
+    def __ne__(self, other: Any):
+        return not self.__eq__(other)
+
     def reduce(self, size):
         self._size = size
 
@@ -129,7 +132,7 @@ class Trade:
         self.__tp_order: Optional[Order] = None
         self.__tag: Optional[str] = tag
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return (
             f'<Trade size={self.__size} time={self.__entry_bar}-{self.__exit_bar or ""} '
             f'price={self.__entry_price}-{self.__exit_price or ""} pl={self.pl:.0f}'
@@ -142,16 +145,6 @@ class Trade:
     def close(self, exit_price: float, exit_time: Timestamp):
         self.__exit_price = exit_price
         self.__exit_time = exit_time
-
-    def close_portion(self, portion: float = 1.0):
-        """Place new `"Order"` to close `portion` of the trade at next market price."""
-        if not 0 < portion <= 1:
-            raise RuntimeError(
-                f"Invalid portion for trade ({portion}).  Must be a fraction between 0 and 1."
-            )
-
-        size = int(copysign(max(1, round(abs(self.__size) * portion)), -self.__size))
-        return Order(self.instrument, size, parent_trade=self)
 
     # Fields getters
 
@@ -213,19 +206,21 @@ class Trade:
     def pl(self):
         """Trade profit (positive) or loss (negative) in cash units."""
         price = self.__exit_price
-        return self.__size * (price - self.__entry_price)
+        return self.__size * (price - self.__entry_price) if price else 0
 
     @property
     def pl_pct(self):
         """Trade profit (positive) or loss (negative) in percent."""
         price = self.__exit_price
-        return copysign(1, self.__size) * (price / self.__entry_price - 1)
+        return (
+            copysign(1, self.__size) * (price / self.__entry_price - 1) if price else 0
+        )
 
     @property
     def value(self):
         """Trade total value in cash (volume × price)."""
         price = self.__exit_price
-        return abs(self.__size) * price
+        return abs(self.__size) * price if price else 0
 
     # SL/TP management API
 
@@ -312,12 +307,12 @@ class Position:
         """True if the position is short (position size is negative)."""
         return self.size < 0
 
-    def close(self, portion: float = 1.0):
+    def close(self, exit_price: float, exit_time: Timestamp):
         """
         Close portion of position by closing `portion` of each active trade. See `Trade.close`.
         """
         for trade in self.trades:
-            trade.close_portion(portion)
+            trade.close(exit_price, exit_time)
 
     def __repr__(self):
         return (
