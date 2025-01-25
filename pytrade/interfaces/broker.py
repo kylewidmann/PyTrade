@@ -1,8 +1,8 @@
 import abc
-from typing import Callable
 
-from pytrade.models.instruments import Candlestick, FxInstrument, Granularity
-from pytrade.models.order import OrderRequest
+from pytrade.instruments import Granularity, Instrument
+from pytrade.interfaces.data import IInstrumentData
+from pytrade.models import Order
 
 
 class IBroker(metaclass=abc.ABCMeta):
@@ -21,25 +21,18 @@ class IBroker(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def equity(self) -> float:
         raise NotImplementedError()
-        return self._cash + sum(trade.pl for trade in self.trades)
 
     @property
     @abc.abstractmethod
     def margin_available(self) -> float:
         raise NotImplementedError()
-        # From https://github.com/QuantConnect/Lean/pull/3768
-        margin_used = sum(trade.value / self._leverage for trade in self.trades)
-        return max(0, self.equity - margin_used)
 
     @abc.abstractmethod
-    def order(self, order: OrderRequest):
+    def order(self, order: Order):
         raise NotImplementedError()
 
     @abc.abstractmethod
     def subscribe(
-        self,
-        instrument: FxInstrument,
-        granularity: Granularity,
-        callback: Callable[[Candlestick], None],
-    ):
+        self, instrument: Instrument, granularity: Granularity
+    ) -> IInstrumentData:
         raise NotImplementedError()

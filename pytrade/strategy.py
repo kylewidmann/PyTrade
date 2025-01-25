@@ -1,21 +1,26 @@
 import asyncio
 from abc import abstractmethod
+from datetime import timedelta
+from typing import Optional
 
-from pytrade.interfaces.broker import IBroker
-from pytrade.models.instruments import (
+from pandas import Timestamp
+
+from pytrade.instruments import (
     MINUTES_MAP,
-    CandleData,
-    Candlestick,
+    UPDATE_MAP,
     CandleSubscription,
     FxInstrument,
     Granularity,
-    InstrumentCandles,
+    Instrument,
 )
+from pytrade.interfaces.broker import IBroker
+from pytrade.interfaces.data import IDataContext, IInstrumentData
+from pytrade.models import Order, TimeInForce
 
 
 class FxStrategy:
 
-    def __init__(self, broker: IBroker, data_context: CandleData):
+    def __init__(self, broker: IBroker, data_context: IDataContext):
         self.broker = broker
         self._updates_complete = asyncio.Event()
         self._data_context = data_context
@@ -29,18 +34,21 @@ class FxStrategy:
     def _caluclate_updates(self) -> None:
         self._required_updates: list[CandleSubscription] = []
         max_interval = 0
+        _max_granularity = None
         for subscription in self.subscriptions:
-            max_interval = max(max_interval, MINUTES_MAP[subscription.granularity])
+            if MINUTES_MAP[subscription.granularity] > max_interval:
+                _max_granularity = subscription.granularity
 
-        for subscription in self.subscriptions:
-            expected_update_count = int(
-                max_interval / MINUTES_MAP[subscription.granularity]
-            )
-            self._required_updates += [
-                subscription for _ in range(expected_update_count)
-            ]
+            self._required_updates.append(subscription)
+
+        if _max_granularity:
+            self._update_frequency = UPDATE_MAP[_max_granularity]
+        else:
+            raise RuntimeError("Can not determine update frequency for strategy.")
 
         self._pending_updates = self._required_updates.copy()
+        # Just set to min and let the first update set it correctly
+        self._next_timestamp = Timestamp.min
 
     @property
     @abstractmethod
@@ -53,29 +61,39 @@ class FxStrategy:
 
     def _monitor_instruments(self) -> None:
         for subscription in self.subscriptions:
-            self.broker.subscribe(
-                subscription.instrument,
-                subscription.granularity,
-                self._update_instrument,
+            instrument_data = self.broker.subscribe(
+                subscription.instrument, subscription.granularity
+            )
+            instrument_data.on_update += self._update_callback(instrument_data)
+
+    def _update_callback(self, data: IInstrumentData):
+        return lambda: self._handle_update(data)
+
+    def _handle_update(self, data: IInstrumentData) -> None:
+        # If data was missed move to the next update window based on data
+        if data.timestamp > self._next_timestamp:
+            self._next_timestamp = data.timestamp.ceil(freq=self._update_frequency)
+            self._pending_updates = self._required_updates.copy()
+
+        if data.timestamp == self._next_timestamp:
+            self._pending_updates.remove(
+                CandleSubscription(data.instrument, data.granularity)
             )
 
-    def _update_instrument(self, candle: Candlestick) -> None:
-        self._data_context.update(candle)
-        self._pending_updates.remove(
-            CandleSubscription(candle.instrument, candle.granularity)
-        )
         # Filter out update from pending
         if not self._pending_updates:
             self._updates_complete.set()
+            self._next_timestamp + timedelta()
 
-    async def next(self) -> None:
-        await self._updates_complete.wait()
-        self._next()
-        self._pending_updates = self._required_updates.copy()
+    def next(self) -> None:
+        if self._updates_complete.is_set():
+            self._updates_complete.clear()
+            self._next()
+            self._pending_updates = self._required_updates.copy()
 
     def get_data(
         self, instrument: FxInstrument, granularity: Granularity
-    ) -> InstrumentCandles:
+    ) -> IInstrumentData:
         return self._data_context.get(instrument, granularity)
 
     @abstractmethod
@@ -92,8 +110,36 @@ class FxStrategy:
         """
         raise NotImplementedError()
 
-    def buy(self, size, tp=None, sl=None) -> None:
-        pass
+    def buy(
+        self,
+        instrument: Instrument,
+        size,
+        stop: Optional[float] = None,
+        limit: Optional[float] = None,
+        time_in_force: TimeInForce = TimeInForce.GOOD_TILL_CANCELLED,
+        tp=None,
+        sl=None,
+    ) -> None:
+        self.broker.order(
+            Order(
+                instrument,
+                size,
+                stop,
+                limit,
+                time_in_force=time_in_force,
+                take_profit_on_fill=tp,
+                stop_loss_on_fill=sl,
+            )
+        )
 
-    def sell(self, size, tp=None, sl=None) -> None:
-        pass
+    def sell(
+        self,
+        instrument: Instrument,
+        size,
+        stop: Optional[float] = None,
+        limit: Optional[float] = None,
+        time_in_force: TimeInForce = TimeInForce.GOOD_TILL_CANCELLED,
+        tp=None,
+        sl=None,
+    ) -> None:
+        self.buy(instrument, -size, stop, limit, time_in_force, tp, sl)

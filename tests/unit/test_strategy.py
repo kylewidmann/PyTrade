@@ -1,14 +1,14 @@
-import asyncio
 import random
 from datetime import datetime, timedelta
 from typing import List
 from unittest.mock import MagicMock, call, patch
 
 import pytest
+from pandas import Timestamp
 
-from pytrade.models.instruments import (
+from pytrade.data import CandleData
+from pytrade.instruments import (
     MINUTES_MAP,
-    CandleData,
     Candlestick,
     CandleSubscription,
     FxInstrument,
@@ -25,11 +25,7 @@ TEST_SUBCRIPTIONS = [
 
 TEST_UPDATES = [
     CandleSubscription(FxInstrument.EURUSD, Granularity.M5),
-    CandleSubscription(FxInstrument.EURUSD, Granularity.M5),
-    CandleSubscription(FxInstrument.EURUSD, Granularity.M5),
     CandleSubscription(FxInstrument.EURUSD, Granularity.M15),
-    CandleSubscription(FxInstrument.GBPUSD, Granularity.M5),
-    CandleSubscription(FxInstrument.GBPUSD, Granularity.M5),
     CandleSubscription(FxInstrument.GBPUSD, Granularity.M5),
     CandleSubscription(FxInstrument.GBPUSD, Granularity.M15),
 ]
@@ -53,8 +49,8 @@ def get_candles(
     ]
 
 
-def get_updates():
-    end_time = datetime.now()
+def get_updates(freq: str):
+    end_time = Timestamp(datetime.now()).ceil(freq=freq)
     update_candles: list[Candlestick] = []
     max_interval = max(MINUTES_MAP[sub.granularity] for sub in TEST_SUBCRIPTIONS)
     for subscription in TEST_SUBCRIPTIONS:
@@ -69,13 +65,14 @@ def get_updates():
 
 
 def send_strategy_updates(strategy: FxStrategy):
-    update_candles = get_updates()
+    update_candles = get_updates(strategy._update_frequency)
+    mock_instrument_data = MagicMock()
 
-    updates = TEST_UPDATES.copy()
     for candle in update_candles:
-        strategy._update_instrument(candle)
-        updates.remove(CandleSubscription(candle.instrument, candle.granularity))
-        assert len(strategy._pending_updates) == len(updates)
+        mock_instrument_data.instrument = candle.instrument
+        mock_instrument_data.granularity = candle.granularity
+        mock_instrument_data.timestamp = Timestamp(candle.timestamp)
+        strategy._handle_update(mock_instrument_data)
 
 
 class _TestStrategy(FxStrategy):
@@ -93,15 +90,13 @@ class _TestStrategy(FxStrategy):
 
 def test_monitor_instruments():
     broker = MagicMock()
+    broker.subscribe.side_effect = MagicMock()
     data_context = CandleData()
 
     strategy = _TestStrategy(broker, data_context)
     strategy.init()
 
-    subscribe_calls = [
-        call(s.instrument, s.granularity, strategy._update_instrument)
-        for s in TEST_SUBCRIPTIONS
-    ]
+    subscribe_calls = [call(s.instrument, s.granularity) for s in TEST_SUBCRIPTIONS]
 
     broker.subscribe.assert_has_calls(subscribe_calls)
 
@@ -135,7 +130,7 @@ async def test_strategy_next():
 
         send_strategy_updates(strategy)
 
-        await strategy.next()
+        strategy.next()
         assert len(strategy._pending_updates) == len(TEST_UPDATES)
         assert strategy._pending_updates == strategy._required_updates
 
@@ -151,15 +146,13 @@ async def test_strategy_waits_for_updates():
         strategy.init()
         for i in range(iterations):
 
-            next_task = asyncio.create_task(strategy.next())
+            strategy.next()
             assert not mock_next.called
-            assert not next_task.done()
 
             send_strategy_updates(strategy)
+            strategy.next()
 
-            await asyncio.wait_for(next_task, timeout=0.2)
             assert mock_next.called
-            assert next_task.done()
             assert len(strategy._pending_updates) == len(TEST_UPDATES)
             assert strategy._pending_updates == strategy._required_updates
             mock_next.reset_mock()

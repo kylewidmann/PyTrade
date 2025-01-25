@@ -5,15 +5,8 @@ from datetime import datetime, timedelta
 import pandas as pd
 import pytest
 
-from pytrade.models.instruments import (
-    COLUMNS,
-    INDEX,
-    MINUTES_MAP,
-    Candlestick,
-    FxInstrument,
-    Granularity,
-    InstrumentCandles,
-)
+from pytrade.data import COLUMNS, INDEX, InstrumentCandles
+from pytrade.instruments import MINUTES_MAP, Candlestick, FxInstrument, Granularity
 
 
 def get_candles(count: int, granularity: Granularity):

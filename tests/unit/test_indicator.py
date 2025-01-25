@@ -3,14 +3,9 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 
-from pytrade.models.indicator import Indicator
-from pytrade.models.instruments import (
-    MINUTES_MAP,
-    Candlestick,
-    FxInstrument,
-    Granularity,
-    InstrumentCandles,
-)
+from pytrade.data import InstrumentCandles
+from pytrade.indicator import Indicator
+from pytrade.instruments import MINUTES_MAP, Candlestick, FxInstrument, Granularity
 
 
 def get_candles(
