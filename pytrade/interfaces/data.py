@@ -53,7 +53,7 @@ class IInstrumentData:
     @property
     def Close(self):
         return self.df.Close
-    
+
     @property
     def last_price(self):
         return self.Close.iloc[-1]

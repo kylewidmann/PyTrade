@@ -26,16 +26,16 @@ class IBroker(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def margin_available(self) -> float:
         raise NotImplementedError()
-    
+
     @property
     @abc.abstractmethod
     def leverage(self) -> float:
         raise NotImplementedError()
-    
+
     @abc.abstractmethod
     def get_position(self, instrument: Instrument) -> Position:
         raise NotImplementedError()
-    
+
     @abc.abstractmethod
     def close_position(self, instrument: Instrument):
         raise NotImplementedError()

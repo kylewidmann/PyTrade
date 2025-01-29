@@ -127,7 +127,7 @@ class Trade:
         self.__entry_price = entry_price
         self.__data = data
         self.__exit_price: Optional[float] = None
-        self.__entry_bar: int = data.df.index.get_loc(entry_time)
+        self.__entry_bar: int = data.df.index.get_loc(entry_time)  # type: ignore
         self.__exit_bar: Optional[int] = None
         self.__entry_time: Timestamp = entry_time
         self.__exit_time: Optional[Timestamp] = None
@@ -148,7 +148,7 @@ class Trade:
     def close(self, exit_price: float, exit_time: Timestamp):
         self.__exit_price = exit_price
         self.__exit_time = exit_time
-        self.__exit_bar = self.__data.df.index.get_loc(exit_time)
+        self.__exit_bar = self.__data.df.index.get_loc(exit_time)  # type: ignore
 
     # Fields getters
     @property
@@ -202,9 +202,9 @@ class Trade:
     def exit_time(self) -> Optional[pd.Timestamp]:
         """Datetime of when the trade was exited."""
         return self.__exit_time
-    
+
     @property
-    def exit_bar(self) -> int:
+    def exit_bar(self) -> Optional[int]:
         return self.__exit_bar
 
     @property
@@ -227,9 +227,7 @@ class Trade:
     def pl_pct(self):
         """Trade profit (positive) or loss (negative) in percent."""
         price = self.__exit_price or self.__data.last_price
-        return (
-            copysign(1, self.__size) * (price / self.__entry_price - 1)
-        )
+        return copysign(1, self.__size) * (price / self.__entry_price - 1)
 
     @property
     def value(self):
