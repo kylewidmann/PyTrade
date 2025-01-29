@@ -38,7 +38,7 @@ def test_order_equality():
 def test_order_reudce():
     new_size = 50
     order = Order("GOOG", 100, 101, 102)
-    order.reduce(new_size)
+    order.resize(new_size)
 
     assert order.size == new_size
 
