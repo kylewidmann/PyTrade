@@ -227,13 +227,13 @@ class Trade:
     def pl_pct(self):
         """Trade profit (positive) or loss (negative) in percent."""
         price = self.__exit_price or self.__data.last_price
-        return copysign(1, self.__size) * (price / self.__entry_price - 1)
+        return copysign(1, self.__size) * (price / self.__entry_price - 1) * 100
 
     @property
     def value(self):
         """Trade total value in cash (volume × price)."""
-        price = self.__exit_price
-        return abs(self.__size) * price if price else 0
+        price = self.__exit_price or self.__data.last_price
+        return abs(self.__size) * price
 
     # SL/TP management API
 
@@ -319,13 +319,6 @@ class Position:
     def is_short(self) -> bool:
         """True if the position is short (position size is negative)."""
         return self.size < 0
-
-    def close(self, exit_price: float, exit_time: Timestamp):
-        """
-        Close portion of position by closing `portion` of each active trade. See `Trade.close`.
-        """
-        for trade in self.trades:
-            trade.close(exit_price, exit_time)
 
     def __repr__(self):
         return (
