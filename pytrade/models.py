@@ -7,6 +7,7 @@ import pandas as pd
 from pandas import Timestamp
 
 from pytrade.instruments import Instrument
+from pytrade.interfaces.data import IInstrumentData
 
 
 class TimeInForce(Enum):
@@ -50,7 +51,7 @@ class Order(dict):
     def __ne__(self, other: Any):
         return not self.__eq__(other)
 
-    def reduce(self, size):
+    def resize(self, size):
         self._size = size
 
     @property
@@ -118,14 +119,16 @@ class Trade:
         size: int,
         entry_price: float,
         entry_time: Timestamp,
+        data: IInstrumentData,
         tag: Optional[str] = None,
     ):
         self.__instrument = instrument
         self.__size = size
         self.__entry_price = entry_price
+        self.__data = data
         self.__exit_price: Optional[float] = None
-        self.__entry_bar: Timestamp = entry_time
-        self.__exit_bar: Optional[Timestamp] = None
+        self.__entry_bar: int = data.df.index.get_loc(entry_time)  # type: ignore
+        self.__exit_bar: Optional[int] = None
         self.__entry_time: Timestamp = entry_time
         self.__exit_time: Optional[Timestamp] = None
         self.__sl_order: Optional[Order] = None
@@ -134,7 +137,7 @@ class Trade:
 
     def __repr__(self):  # pragma: no cover
         return (
-            f'<Trade size={self.__size} time={self.__entry_bar}-{self.__exit_bar or ""} '
+            f'<Trade size={self.__size} time={self.__entry_time}-{self.__exit_time or ""} '
             f'price={self.__entry_price}-{self.__exit_price or ""} pl={self.pl:.0f}'
             f'{" tag=" + str(self.__tag) if self.__tag is not None else ""}>'
         )
@@ -145,8 +148,12 @@ class Trade:
     def close(self, exit_price: float, exit_time: Timestamp):
         self.__exit_price = exit_price
         self.__exit_time = exit_time
+        self.__exit_bar = self.__data.df.index.get_loc(exit_time)  # type: ignore
 
     # Fields getters
+    @property
+    def data(self):
+        return self.__data
 
     @property
     def instrument(self):
@@ -188,9 +195,17 @@ class Trade:
         return self.__entry_time
 
     @property
+    def entry_bar(self) -> int:
+        return self.__entry_bar
+
+    @property
     def exit_time(self) -> Optional[pd.Timestamp]:
         """Datetime of when the trade was exited."""
         return self.__exit_time
+
+    @property
+    def exit_bar(self) -> Optional[int]:
+        return self.__exit_bar
 
     @property
     def is_long(self):
@@ -205,22 +220,20 @@ class Trade:
     @property
     def pl(self):
         """Trade profit (positive) or loss (negative) in cash units."""
-        price = self.__exit_price
-        return self.__size * (price - self.__entry_price) if price else 0
+        price = self.__exit_price or self.__data.last_price
+        return self.__size * (price - self.__entry_price)
 
     @property
     def pl_pct(self):
         """Trade profit (positive) or loss (negative) in percent."""
-        price = self.__exit_price
-        return (
-            copysign(1, self.__size) * (price / self.__entry_price - 1) if price else 0
-        )
+        price = self.__exit_price or self.__data.last_price
+        return copysign(1, self.__size) * (price / self.__entry_price - 1) * 100
 
     @property
     def value(self):
         """Trade total value in cash (volume × price)."""
-        price = self.__exit_price
-        return abs(self.__size) * price if price else 0
+        price = self.__exit_price or self.__data.last_price
+        return abs(self.__size) * price
 
     # SL/TP management API
 
@@ -306,13 +319,6 @@ class Position:
     def is_short(self) -> bool:
         """True if the position is short (position size is negative)."""
         return self.size < 0
-
-    def close(self, exit_price: float, exit_time: Timestamp):
-        """
-        Close portion of position by closing `portion` of each active trade. See `Trade.close`.
-        """
-        for trade in self.trades:
-            trade.close(exit_price, exit_time)
 
     def __repr__(self):
         return (

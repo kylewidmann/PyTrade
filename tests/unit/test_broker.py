@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 from pytrade.broker import Broker
 from pytrade.instruments import FxInstrument
-from pytrade.models import Order, TimeInForce
+from pytrade.models import Order
 
 
 def test_buy_order():
@@ -11,7 +11,7 @@ def test_buy_order():
 
     assert len(broker._orders) == 0
 
-    broker.order(Order(FxInstrument.GBPUSD, 10, TimeInForce.GOOD_TILL_CANCELLED))
+    broker.order(Order(FxInstrument.GBPUSD, 10))
 
     assert len(broker._orders) == 1
 
@@ -22,7 +22,7 @@ def test_sell_order():
 
     assert len(broker._orders) == 0
 
-    broker.order(Order(FxInstrument.GBPUSD, -10, TimeInForce.GOOD_TILL_CANCELLED))
+    broker.order(Order(FxInstrument.GBPUSD, -10))
 
     assert len(broker._orders) == 1
 
@@ -31,7 +31,7 @@ def test_process_orders():
     client = Mock()
     broker = Broker(client)
 
-    broker.order(Order(FxInstrument.GBPUSD, 10, TimeInForce.GOOD_TILL_CANCELLED))
+    broker.order(Order(FxInstrument.GBPUSD, 10))
 
     assert len(broker._orders) == 1
 

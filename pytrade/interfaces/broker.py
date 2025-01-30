@@ -2,7 +2,7 @@ import abc
 
 from pytrade.instruments import Granularity, Instrument
 from pytrade.interfaces.data import IInstrumentData
-from pytrade.models import Order
+from pytrade.models import Order, Position
 
 
 class IBroker(metaclass=abc.ABCMeta):
@@ -25,6 +25,19 @@ class IBroker(metaclass=abc.ABCMeta):
     @property
     @abc.abstractmethod
     def margin_available(self) -> float:
+        raise NotImplementedError()
+
+    @property
+    @abc.abstractmethod
+    def leverage(self) -> float:
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def get_position(self, instrument: Instrument) -> Position:
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def close_position(self, instrument: Instrument):
         raise NotImplementedError()
 
     @abc.abstractmethod

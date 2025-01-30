@@ -3,7 +3,7 @@ from typing import List
 from pytrade.instruments import Granularity, Instrument
 from pytrade.interfaces.broker import IBroker
 from pytrade.interfaces.client import IClient
-from pytrade.models import Order
+from pytrade.models import Order, Position
 
 
 class Broker(IBroker):
@@ -19,6 +19,16 @@ class Broker(IBroker):
     @property
     def margin_available(self) -> float:
         raise NotImplementedError
+
+    @property
+    def leverage(self) -> float:
+        raise NotImplementedError()
+
+    def get_position(self, instrument: Instrument) -> Position:
+        raise NotImplementedError()
+
+    def close_position(self, instrument: Instrument):
+        raise NotImplementedError()
 
     def order(self, order: Order):
         self._orders.append(order)
