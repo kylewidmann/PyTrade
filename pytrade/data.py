@@ -8,7 +8,7 @@ from pytrade.events.event import Event
 from pytrade.instruments import Candlestick, Granularity, Instrument
 from pytrade.interfaces.data import IDataContext, IInstrumentData
 
-COLUMNS = ["Timestamp", "Instrument", "Open", "High", "Low", "Close"]
+COLUMNS = ["datetime", "instrument", "open", "high", "low", "close"]
 
 INDEX = COLUMNS[0]
 

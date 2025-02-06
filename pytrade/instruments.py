@@ -134,12 +134,12 @@ class Candlestick:
 
     def to_dict(self):
         return {
-            "Timestamp": self.timestamp,
-            "Instrument": self.instrument,
-            "Open": self.open,
-            "High": self.open,
-            "Low": self.open,
-            "Close": self.open,
+            "datetime": self.timestamp,
+            "instrument": self.instrument,
+            "open": self.open,
+            "high": self.open,
+            "low": self.open,
+            "close": self.open,
         }
 
 

@@ -40,19 +40,19 @@ class IInstrumentData:
 
     @property
     def Open(self):
-        return self.df.Open
+        return self.df.open
 
     @property
     def High(self):
-        return self.df.High
+        return self.df.high
 
     @property
     def Low(self):
-        return self.df.Low
+        return self.df.low
 
     @property
     def Close(self):
-        return self.df.Close
+        return self.df.close
 
     @property
     def last_price(self):
