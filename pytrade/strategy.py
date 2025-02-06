@@ -92,7 +92,7 @@ class FxStrategy:
             self._pending_updates = self._required_updates.copy()
 
     def get_data(
-        self, instrument: FxInstrument, granularity: Granularity
+        self, instrument: Instrument, granularity: Granularity
     ) -> IInstrumentData:
         return self._data_context.get(instrument, granularity)
 
