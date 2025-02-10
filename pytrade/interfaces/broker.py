@@ -2,7 +2,8 @@ import abc
 
 from pytrade.instruments import Granularity, Instrument
 from pytrade.interfaces.data import IInstrumentData
-from pytrade.models import Order, Position
+from pytrade.interfaces.position import IPosition
+from pytrade.models import Order
 
 
 class IBroker(metaclass=abc.ABCMeta):
@@ -33,7 +34,7 @@ class IBroker(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def get_position(self, instrument: Instrument) -> Position:
+    def get_position(self, instrument: Instrument) -> IPosition:
         raise NotImplementedError()
 
     @abc.abstractmethod

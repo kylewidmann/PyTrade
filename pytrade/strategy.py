@@ -9,7 +9,6 @@ from pytrade.instruments import (
     MINUTES_MAP,
     UPDATE_MAP,
     CandleSubscription,
-    FxInstrument,
     Granularity,
     Instrument,
 )
