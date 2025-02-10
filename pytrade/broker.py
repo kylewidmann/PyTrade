@@ -3,7 +3,8 @@ from typing import List
 from pytrade.instruments import Granularity, Instrument
 from pytrade.interfaces.broker import IBroker
 from pytrade.interfaces.client import IClient
-from pytrade.models import Order, Position
+from pytrade.interfaces.position import IPosition
+from pytrade.models import Order
 
 
 class Broker(IBroker):
@@ -24,7 +25,7 @@ class Broker(IBroker):
     def leverage(self) -> float:
         raise NotImplementedError()
 
-    def get_position(self, instrument: Instrument) -> Position:
+    def get_position(self, instrument: Instrument) -> IPosition:
         raise NotImplementedError()
 
     def close_position(self, instrument: Instrument):
