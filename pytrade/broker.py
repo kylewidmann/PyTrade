@@ -48,7 +48,7 @@ class Broker(IBroker):
     ) -> IInstrumentData:
 
         instrument_data = self._data_context.get(instrument, granularity)
-
+        
         self.client.subscribe(instrument, granularity, instrument_data.update)
 
         return instrument_data

@@ -1,3 +1,4 @@
+import asyncio
 from datetime import timedelta
 from typing import Optional
 
@@ -99,6 +100,7 @@ class CandleData(IDataContext):
     def __init__(self, max_size=1000):
         self._data: dict[tuple[Instrument, Granularity], InstrumentCandles] = {}
         self._max_size = max_size
+        self._update_event = asyncio.Event()
 
     @property
     def universe(self) -> list[IInstrumentData]:
@@ -126,3 +128,8 @@ class CandleData(IDataContext):
         )
         self._data[key] = instrument_candles
         instrument_candles.update(candle)
+        self._update_event.set()
+
+    async def next(self):
+        await self._update_event.wait()
+        self._update_event.clear()
