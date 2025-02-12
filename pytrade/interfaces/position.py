@@ -25,12 +25,6 @@ class IPosition:
 
     @property
     @abstractmethod
-    def pl_pct(self) -> float:
-        """Profit (positive) or loss (negative) of the current position in percent."""
-        raise NotImplementedError()
-
-    @property
-    @abstractmethod
     def is_long(self) -> bool:
         """True if the position is long (position size is positive)."""
         raise NotImplementedError()
