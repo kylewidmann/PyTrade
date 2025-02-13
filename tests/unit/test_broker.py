@@ -1,13 +1,17 @@
-from datetime import datetime, timedelta, timezone, tzinfo
 import random
+from datetime import datetime, timedelta, timezone
 from unittest.mock import MagicMock, Mock
 
 from pytrade.broker import Broker
 from pytrade.instruments import MINUTES_MAP, Candlestick, FxInstrument, Granularity
 from pytrade.models import Order
 
+
 def _get_candles(
-    instrument: FxInstrument, granularity: Granularity, count: int, end_time: datetime = datetime.now(tz=timezone.utc)
+    instrument: FxInstrument,
+    granularity: Granularity,
+    count: int,
+    end_time: datetime = datetime.now(tz=timezone.utc),
 ) -> list[Candlestick]:
     _delta = MINUTES_MAP[granularity]
     return [
@@ -22,6 +26,7 @@ def _get_candles(
         )
         for i in range(count)
     ]
+
 
 def test_buy_order():
     client = Mock()

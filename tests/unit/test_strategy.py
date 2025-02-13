@@ -71,7 +71,9 @@ def send_strategy_updates(strategy: FxStrategy):
     for candle in update_candles:
         mock_instrument_data.instrument = candle.instrument
         mock_instrument_data.granularity = candle.granularity
-        mock_instrument_data.timestamp = Timestamp(candle.timestamp, tzinfo=timezone.utc)
+        mock_instrument_data.timestamp = Timestamp(
+            candle.timestamp, tzinfo=timezone.utc
+        )
         strategy._handle_update(mock_instrument_data)
 
 

@@ -1,4 +1,3 @@
-from multiprocessing.forkserver import SIGNED_STRUCT
 from typing import List, Tuple
 
 from pytrade.data import CandleData
@@ -45,19 +44,23 @@ class Broker(IBroker):
 
         self._orders.clear()
 
-    def load_instrument_candles(self, instrument: Instrument, granularity: Granularity, count: int):
+    def load_instrument_candles(
+        self, instrument: Instrument, granularity: Granularity, count: int
+    ):
         key = (instrument, granularity)
 
         if key in self._subscriptions:
-            raise RuntimeError(f"Consumers are already subscribed to {instrument}[{granularity.value}], can not populate historical data.")
-        
+            raise RuntimeError(
+                f"Consumers are already subscribed to {instrument}[{granularity.value}], \
+                    can not populate historical data."
+            )
+
         instrument_data = self._data_context.get(instrument, granularity)
         if len(instrument_data.df) < count:
             instrument_data.clear()
             candles = self.client.get_candles(instrument, granularity, count)
             for candle in candles:
                 instrument_data.update(candle)
-
 
     def subscribe(
         self, instrument: Instrument, granularity: Granularity
