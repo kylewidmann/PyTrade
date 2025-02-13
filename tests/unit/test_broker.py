@@ -1,7 +1,7 @@
-from unittest.mock import Mock
+from unittest.mock import MagicMock, Mock
 
 from pytrade.broker import Broker
-from pytrade.instruments import FxInstrument
+from pytrade.instruments import FxInstrument, Granularity
 from pytrade.models import Order
 
 
@@ -49,5 +49,27 @@ def test_sell():
     pass
 
 
-def test_get_data():
-    pass
+def test_subscribe():
+    client = MagicMock()
+    broker = Broker(client)
+
+    assert len(broker._subscriptions) == 0
+    assert client.subscribe.call_count == 0
+
+    broker.subscribe(FxInstrument.EURUSD, Granularity.M1)
+
+    assert len(broker._subscriptions) == 1
+    assert client.subscribe.call_count == 1
+    assert len(broker._data_context._data) == 1
+
+    broker.subscribe(FxInstrument.EURUSD, Granularity.M1)
+
+    assert len(broker._subscriptions) == 1
+    assert client.subscribe.call_count == 1
+    assert len(broker._data_context._data) == 1
+
+    broker.subscribe(FxInstrument.GBPUSD, Granularity.M1)
+
+    assert len(broker._subscriptions) == 2
+    assert client.subscribe.call_count == 2
+    assert len(broker._data_context._data) == 2
