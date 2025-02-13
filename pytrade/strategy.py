@@ -1,6 +1,6 @@
 import asyncio
 from abc import abstractmethod
-from datetime import timedelta
+from datetime import timedelta, timezone
 from typing import Optional
 
 from pandas import Timestamp
@@ -48,7 +48,7 @@ class FxStrategy:
 
         self._pending_updates = self._required_updates.copy()
         # Just set to min and let the first update set it correctly
-        self._next_timestamp = Timestamp.min
+        self._next_timestamp = Timestamp.min.replace(tzinfo=timezone.utc)
 
     @property
     @abstractmethod

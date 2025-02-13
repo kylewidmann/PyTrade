@@ -1,5 +1,5 @@
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List
 from unittest.mock import MagicMock, call, patch
 
@@ -71,7 +71,7 @@ def send_strategy_updates(strategy: FxStrategy):
     for candle in update_candles:
         mock_instrument_data.instrument = candle.instrument
         mock_instrument_data.granularity = candle.granularity
-        mock_instrument_data.timestamp = Timestamp(candle.timestamp)
+        mock_instrument_data.timestamp = Timestamp(candle.timestamp, tzinfo=timezone.utc)
         strategy._handle_update(mock_instrument_data)
 
 
