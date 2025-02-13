@@ -1,9 +1,27 @@
+from datetime import datetime, timedelta, timezone, tzinfo
+import random
 from unittest.mock import MagicMock, Mock
 
 from pytrade.broker import Broker
-from pytrade.instruments import FxInstrument, Granularity
+from pytrade.instruments import MINUTES_MAP, Candlestick, FxInstrument, Granularity
 from pytrade.models import Order
 
+def _get_candles(
+    instrument: FxInstrument, granularity: Granularity, count: int, end_time: datetime = datetime.now(tz=timezone.utc)
+) -> list[Candlestick]:
+    _delta = MINUTES_MAP[granularity]
+    return [
+        Candlestick(
+            instrument,
+            granularity,
+            random.uniform(0, 10),
+            random.uniform(0, 10),
+            random.uniform(0, 10),
+            random.uniform(0, 10),
+            end_time - timedelta(minutes=_delta * i),
+        )
+        for i in range(count)
+    ]
 
 def test_buy_order():
     client = Mock()
@@ -73,3 +91,24 @@ def test_subscribe():
     assert len(broker._subscriptions) == 2
     assert client.subscribe.call_count == 2
     assert len(broker._data_context._data) == 2
+
+
+def test_load_instrument_candles():
+    client = MagicMock()
+    client.get_candles.side_effect = _get_candles
+    broker = Broker(client)
+
+    instrument = FxInstrument.EURUSD
+    granularity = Granularity.M1
+
+    instrument_data = broker._data_context.get(instrument, granularity)
+    assert len(instrument_data.df) == 0
+
+    broker.load_instrument_candles(instrument, granularity, 10)
+    assert len(instrument_data.df) == 10
+
+    broker.load_instrument_candles(instrument, granularity, 5)
+    assert len(instrument_data.df) == 10
+
+    broker.load_instrument_candles(instrument, granularity, 20)
+    assert len(instrument_data.df) == 20
