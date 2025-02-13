@@ -52,7 +52,7 @@ class Broker(IBroker):
         if key in self._subscriptions:
             raise RuntimeError(
                 f"Consumers are already subscribed to {instrument}[{granularity.value}], \
-                    can not populate historical data."
+can not populate historical data."
             )
 
         instrument_data = self._data_context.get(instrument, granularity)
