@@ -42,6 +42,7 @@ class FxStrategy:
 
         if _max_granularity:
             self._update_frequency = UPDATE_MAP[_max_granularity]
+            self._update_minutes = MINUTES_MAP[_max_granularity]
         else:
             raise RuntimeError("Can not determine update frequency for strategy.")
 
@@ -82,7 +83,7 @@ class FxStrategy:
         # Filter out update from pending
         if not self._pending_updates:
             self._updates_complete.set()
-            self._next_timestamp + timedelta()
+            self._next_timestamp + timedelta(min=self._update_minutes)
 
     def next(self) -> None:
         if self._updates_complete.is_set():
