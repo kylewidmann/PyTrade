@@ -1,11 +1,11 @@
 from typing import List, Tuple
 
 from pytrade.data import CandleData
-from pytrade.instruments import Candlestick, Granularity, Instrument
+from pytrade.instruments import Granularity, Instrument
 from pytrade.interfaces.broker import IBroker
 from pytrade.interfaces.client import IClient
-from pytrade.interfaces.position import IPosition
 from pytrade.interfaces.data import IInstrumentData
+from pytrade.interfaces.position import IPosition
 from pytrade.models import Order
 
 
@@ -51,11 +51,10 @@ class Broker(IBroker):
         key = (instrument, granularity)
 
         instrument_data = self._data_context.get(instrument, granularity)
-        
+
         # If we are already tracking this pair/granularity no need to resubscribe
         if key not in self._subscriptions:
             self.client.subscribe(instrument, granularity, instrument_data.update)
             self._subscriptions.append(key)
 
         return instrument_data
-

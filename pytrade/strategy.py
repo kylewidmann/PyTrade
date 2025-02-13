@@ -83,7 +83,7 @@ class FxStrategy:
         # Filter out update from pending
         if not self._pending_updates:
             self._updates_complete.set()
-            self._next_timestamp + timedelta(min=self._update_minutes)
+            self._next_timestamp + timedelta(minutes=self._update_minutes)
 
     def next(self) -> None:
         if self._updates_complete.is_set():
