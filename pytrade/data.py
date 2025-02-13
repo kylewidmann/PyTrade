@@ -58,6 +58,9 @@ class InstrumentCandles(IInstrumentData):
     def on_update(self, value: Event):
         self.__update_event = value
 
+    def clear(self):
+        self._data = self._data[0:0]
+
     def update(self, candlestick: Candlestick):
         if not self.__instrument:
             self.__instrument = candlestick.instrument
@@ -79,6 +82,12 @@ class InstrumentCandles(IInstrumentData):
                 raise RuntimeError(
                     "Expected dataframe to have DatetimeInex. Unable to caluclate timedelta from index."
                 )
+            if self._data.index[-1] >= candlestick.timestamp:
+                raise RuntimeError(
+                    f"Received a candle update for on outdated timestamp. Update \
+                        time {candlestick.timestamp} but dataframe is at {self._data.index[-1]}"
+                )
+
             self._data.index = self._data.index.shift(  # type: ignore
                 int(_delta.seconds / 60), freq="min"
             )
