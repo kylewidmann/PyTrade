@@ -2,6 +2,7 @@ import abc
 from typing import Callable
 
 from pytrade.instruments import Candlestick, Granularity, Instrument
+from pytrade.interfaces.account import IAccount
 from pytrade.models import Order
 
 
@@ -20,8 +21,21 @@ class IClient:
             and callable(subclass.subscribe)
         ) or NotImplemented
 
+    @property
+    @abc.abstractmethod
+    def account(self) -> IAccount:
+        raise NotImplementedError()
+
     @abc.abstractmethod
     def order(self, order: Order):
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def get_position(self, instrument: Instrument):
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def close_position(self, instruemnt: Instrument):
         raise NotImplementedError()
 
     @abc.abstractmethod
