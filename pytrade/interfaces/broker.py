@@ -46,6 +46,12 @@ class IBroker(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     @abc.abstractmethod
+    def load_instrument_candles(
+        self, instrument: Instrument, granularity: Granularity, count: int
+    ):
+        raise NotImplementedError()
+
+    @abc.abstractmethod
     def subscribe(
         self, instrument: Instrument, granularity: Granularity
     ) -> IInstrumentData:
