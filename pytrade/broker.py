@@ -41,10 +41,6 @@ class Broker(IBroker):
 
     def process_orders(self):
         for order in self._orders:
-            if order.size > 0 and order.size < 1:
-                _data = self._data_context.get(order.instrument)
-                _adjusted_size = copysign(self.margin_available * self.leverage * abs(order.size)) // _data.last_price
-                order.resize(_adjusted_size)
             self.client.order(order)
 
         self._orders.clear()
