@@ -97,9 +97,15 @@ class FxStrategy:
         self, instrument: Instrument, granularity: Granularity
     ) -> IInstrumentData:
         return self._data_context.get(instrument, granularity)
-    
+
     def _get_order_size(self, rel_size: float, price: float):
-        return  copysign(self.broker.margin_available * self.broker.leverage * abs(rel_size)) // price
+        return (
+            copysign(
+                self.broker.margin_available * self.broker.leverage * abs(rel_size),
+                rel_size,
+            )
+            // price
+        )
 
     @abstractmethod
     def _init(self) -> None:

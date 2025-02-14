@@ -1,4 +1,3 @@
-from math import copysign
 from typing import List, Tuple
 
 from pytrade.data import CandleData
