@@ -27,8 +27,9 @@ class FxStrategy:
 
     def init(self) -> None:
         self._caluclate_updates()
-        self._monitor_instruments()
+        # Call init first incase any indicators preload data for initial signals
         self._init()
+        self._monitor_instruments()
 
     def _caluclate_updates(self) -> None:
         self._required_updates: list[CandleSubscription] = []
