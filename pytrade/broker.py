@@ -72,7 +72,7 @@ can not populate historical data."
 
         # If we are already tracking this pair/granularity no need to resubscribe
         if key not in self._subscriptions:
-            self.client.subscribe(instrument, granularity, instrument_data.update)
+            self.client.subscribe(instrument, granularity, self._data_context.update)
             self._subscriptions.append(key)
 
         return instrument_data
