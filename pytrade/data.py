@@ -139,6 +139,7 @@ class CandleData(IDataContext):
         instrument_candles.update(candle)
         self._update_event.set()
 
-    async def next(self):
+    async def next(self) -> bool:
         await self._update_event.wait()
         self._update_event.clear()
+        return True

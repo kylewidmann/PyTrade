@@ -69,3 +69,7 @@ class IDataContext:
     @abstractmethod
     def get(self, instrument: Instrument, granularity: Granularity) -> IInstrumentData:
         raise NotImplementedError()
+
+    @abstractmethod
+    async def next(self) -> bool:
+        raise NotImplementedError()
