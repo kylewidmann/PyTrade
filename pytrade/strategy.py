@@ -1,7 +1,6 @@
 import asyncio
 from abc import abstractmethod
 from datetime import timedelta, timezone
-from math import copysign
 from typing import Optional
 
 from pandas import Timestamp
