@@ -121,7 +121,9 @@ class CandleData(IDataContext):
         # Need to handle case where instantiatied and different max size is provided
         return cls.instance
 
-    def get(self, instrument: Instrument, granularity: Granularity):
+    def get(
+        self, instrument: Instrument, granularity: Granularity
+    ) -> InstrumentCandles:
         key = (instrument, granularity)
         instrument_candles: InstrumentCandles = self._data.get(
             key, InstrumentCandles(max_size=self._max_size)
