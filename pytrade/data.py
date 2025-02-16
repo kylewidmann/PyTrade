@@ -84,7 +84,7 @@ class InstrumentCandles(IInstrumentData):
                 f"Received {candlestick.granularity} for history[{self.__granularity}]"
             )
 
-        if len(self._data) > 0 and  self._data.index[-1] == candlestick.timestamp:
+        if len(self._data) > 0 and self._data.index[-1] == candlestick.timestamp:
             self.logger.warning(
                 f"Received an duplicate update for {candlestick.instrument}[{candlestick.timestamp}]"
             )

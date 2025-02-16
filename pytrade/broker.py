@@ -46,7 +46,7 @@ class Broker(IBroker):
             self.client.order(order)
 
         self._orders.clear()
-        self.logger.debug(f"Orders cleared.")
+        self.logger.debug("Orders cleared.")
 
     def load_instrument_candles(
         self, instrument: Instrument, granularity: Granularity, count: int

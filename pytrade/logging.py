@@ -2,8 +2,6 @@ import inspect
 import logging
 import os
 
-from isort import stream
-
 format = "%(asctime)s - %(levelname)s - %(message)s"
 formatter = logging.Formatter(format)
 log_level = getattr(logging, os.environ.get("LOG_LEVEL", "INFO").upper())
@@ -16,6 +14,7 @@ stream_handler.setFormatter(formatter)
 file_handler = logging.FileHandler("app.log")
 file_handler.setLevel(log_level)
 file_handler.setFormatter(formatter)
+
 
 def get_logger():
     stack = inspect.stack()

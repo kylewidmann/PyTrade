@@ -91,7 +91,9 @@ and next update time to {self._next_timestamp}"
             )
             self._next_timestamp = data.timestamp.ceil(freq=self._update_frequency)
             self._pending_updates = self._required_updates.copy()
-            self.logger.debug(F"Updated next update time to {self._next_timestamp} and reset pending updates.")
+            self.logger.debug(
+                f"Updated next update time to {self._next_timestamp} and reset pending updates."  # nosec
+            )
 
         if data.timestamp == self._next_timestamp:
             self.logger.debug(f"Removing update for {data}.")
@@ -110,11 +112,11 @@ and next update time to {self._next_timestamp}"
 
     def next(self) -> None:
         if self._updates_complete.is_set():
-            self.logger.debug(f"Update complete. Running indicators.")
+            self.logger.debug("Update complete. Running indicators.")
             self._updates_complete.clear()
             self._next()
             self._pending_updates = self._required_updates.copy()
-            self.logger.debug(f"Strategy iteration complete. Reset updates.")
+            self.logger.debug("Strategy iteration complete. Reset updates.")
 
     def get_data(
         self, instrument: Instrument, granularity: Granularity
@@ -146,14 +148,14 @@ and next update time to {self._next_timestamp}"
         sl=None,
     ) -> None:
         order = Order(
-                instrument,
-                size,
-                stop,
-                limit,
-                time_in_force=time_in_force,
-                take_profit_on_fill=tp,
-                stop_loss_on_fill=sl,
-            )
+            instrument,
+            size,
+            stop,
+            limit,
+            time_in_force=time_in_force,
+            take_profit_on_fill=tp,
+            stop_loss_on_fill=sl,
+        )
         self.logger.info(f"Placing order {order}")
         self.broker.order(order)
 
