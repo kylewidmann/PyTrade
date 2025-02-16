@@ -44,6 +44,15 @@ class Order(dict):
         self._trailing_stop_loss_on_fill: Optional[float] = trailing_stop_loss_on_fill
         self.__parent_trade = parent_trade
 
+    def __str__(self):
+
+        return (
+            f"<Order instrument={self._instrument} size={self._size} "
+            f"stop={self._stop} limit={self._limit} price_bound={self._price_bound}"
+            f"time_in_force={self._time_in_force} tp={self.take_profit_on_fill} sl={self.stop_loss_on_fill}"
+            f"trailing_sl={self._trailing_stop_loss_on_fill} parent_trade={self.__parent_trade}>"
+        )
+
     def __eq__(self, other: Any):
         return other is self
 
@@ -134,7 +143,7 @@ class Trade:
         self.__tp_order: Optional[Order] = None
         self.__tag: Optional[str] = tag
 
-    def __repr__(self):  # pragma: no cover
+    def __str__(self):  # pragma: no cover
         return (
             f'<Trade size={self.__size} time={self.__entry_time}-{self.__exit_time or ""} '
             f'price={self.__entry_price}-{self.__exit_price or ""} pl={self.pl:.0f}'

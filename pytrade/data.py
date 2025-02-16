@@ -1,5 +1,5 @@
 import asyncio
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import pandas as pd
@@ -8,6 +8,7 @@ from pandas import Timestamp
 from pytrade.events.event import Event
 from pytrade.instruments import Candlestick, Granularity, Instrument
 from pytrade.interfaces.data import IDataContext, IInstrumentData
+from pytrade.logging import get_logger
 
 COLUMNS = ["datetime", "instrument", "open", "high", "low", "close"]
 
@@ -33,6 +34,13 @@ class InstrumentCandles(IInstrumentData):
         self.__instrument: Optional[Instrument] = None
         self.__granularity: Optional[Granularity] = None
         self.__update_event = Event()
+        self.logger = get_logger()
+
+    def __str__(self):
+        return (
+            f"<InstrumentCandles instrument={self.__instrument} granularity={self.__granularity}"
+            f"max_size={self._max_size} timestamp={self.timestamp}>"
+        )
 
     @property
     def df(self):
@@ -48,7 +56,11 @@ class InstrumentCandles(IInstrumentData):
 
     @property
     def timestamp(self) -> Timestamp:
-        return self._data.index[-1]
+        return (
+            self._data.index[-1]
+            if len(self._data) > 0
+            else pd.Timestamp(datetime.min, tzinfo=timezone.utc)
+        )
 
     @property
     def on_update(self):
@@ -76,13 +88,18 @@ class InstrumentCandles(IInstrumentData):
                 f"Received {candlestick.granularity} for history[{self.__granularity}]"
             )
 
+        if len(self._data) > 0 and self._data.index[-1] == candlestick.timestamp:
+            self.logger.warning(
+                f"Received an duplicate update for {candlestick.instrument}[{candlestick.timestamp}]"
+            )
+
         if self._max_size and len(self._data) >= self._max_size:
             _delta = self._data.index[-1] - self._data.index[-2]
             if not isinstance(_delta, timedelta):
                 raise RuntimeError(
                     "Expected dataframe to have DatetimeInex. Unable to caluclate timedelta from index."
                 )
-            if self._data.index[-1] >= candlestick.timestamp:
+            if self._data.index[-1] > candlestick.timestamp:
                 raise RuntimeError(
                     f"Received a candle update for on outdated timestamp. Update \
                         time {candlestick.timestamp} but dataframe is at {self._data.index[-1]}"
@@ -110,6 +127,10 @@ class CandleData(IDataContext):
         self._data: dict[tuple[Instrument, Granularity], InstrumentCandles] = {}
         self._max_size = max_size
         self._update_event = asyncio.Event()
+        self.logger = get_logger()
+
+    def __str__(self):
+        return f"<CandleData max_size={self._max_size}>"
 
     @property
     def universe(self) -> list[IInstrumentData]:

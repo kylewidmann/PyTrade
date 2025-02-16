@@ -6,3 +6,4 @@ docker
 *.code-workspace
 .dockerignore
 htmlcov
+.env

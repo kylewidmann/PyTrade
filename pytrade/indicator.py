@@ -12,6 +12,9 @@ class Indicator:
         data.on_update += self._update
         self._values = self._run()
 
+    def __str__(self):
+        return f"<{self.__class__.__name__} value={self.value}>"
+
     def _update(self):
         self._values = self._run()
 

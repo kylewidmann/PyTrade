@@ -111,6 +111,9 @@ class CandleSubscription:
 
         return result
 
+    def __str__(self):
+        return f"<{self.__class__.__name__} {self.instrument}[{self.granularity}]>"
+
 
 class Candlestick:
 
@@ -131,6 +134,12 @@ class Candlestick:
         self.low = low
         self.close = close
         self.timestamp = timestamp
+
+    def __str__(self):
+        return (
+            f"<{self.__class__.__name__} instrument={self.instrument} granularity={self.granularity} "
+            f"O: {self.open} H: {self.high} L: {self.low} C:{self.close} Time: {self.timestamp}>"
+        )
 
     def to_dict(self):
         return {
@@ -158,3 +167,6 @@ class TickData:
         )
         self.bid = float(bid)
         self.ask = float(ask)
+
+    def __str__(self):
+        return f"<{self.__class__.__name__} {self.instrument} bid={self.bid:.5f} ask={self.ask:.5f}>"
