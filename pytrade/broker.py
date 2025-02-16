@@ -6,6 +6,7 @@ from pytrade.interfaces.broker import IBroker
 from pytrade.interfaces.client import IClient
 from pytrade.interfaces.data import IInstrumentData
 from pytrade.interfaces.position import IPosition
+from pytrade.logging import get_logger
 from pytrade.models import Order
 
 
@@ -16,6 +17,7 @@ class Broker(IBroker):
         self._orders: List[Order] = []
         self._data_context = CandleData(max_size=100)
         self._subscriptions: list[Tuple[Instrument, Granularity]] = []
+        self.logger = get_logger()
 
     @property
     def equity(self) -> float:
@@ -39,15 +41,18 @@ class Broker(IBroker):
         self._orders.append(order)
 
     def process_orders(self):
+        self.logger.debug(f"Processing {len(self._orders)} orders.")
         for order in self._orders:
             self.client.order(order)
 
         self._orders.clear()
+        self.logger.debug(f"Orders cleared.")
 
     def load_instrument_candles(
         self, instrument: Instrument, granularity: Granularity, count: int
     ):
         key = (instrument, granularity)
+        self.logger.debug(f"Loading candles for {key}")
 
         if key in self._subscriptions:
             raise RuntimeError(
@@ -59,6 +64,7 @@ can not populate historical data."
         if len(instrument_data.df) < count:
             instrument_data.clear()
             candles = self.client.get_candles(instrument, granularity, count)
+            self.logger.debug(f"Loading candles for {instrument_data}.")
             for candle in candles:
                 instrument_data.update(candle)
 
@@ -67,6 +73,7 @@ can not populate historical data."
     ) -> IInstrumentData:
 
         key = (instrument, granularity)
+        self.logger.debug(f"Subscribing to candles for {key}")
 
         instrument_data = self._data_context.get(instrument, granularity)
 
