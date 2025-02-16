@@ -1,5 +1,5 @@
 import asyncio
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import pandas as pd
@@ -56,7 +56,11 @@ class InstrumentCandles(IInstrumentData):
 
     @property
     def timestamp(self) -> Timestamp:
-        return self._data.index[-1]
+        return (
+            self._data.index[-1]
+            if len(self._data) > 0
+            else pd.Timestamp(datetime.min, tzinfo=timezone.utc)
+        )
 
     @property
     def on_update(self):
