@@ -12,10 +12,10 @@ from pytrade.models import Order
 
 class Broker(IBroker):
 
-    def __init__(self, client: IClient):
+    def __init__(self, client: IClient , max_history = 100):
         self.client = client
         self._orders: List[Order] = []
-        self._data_context = CandleData(max_size=100)
+        self._data_context = CandleData(max_size=max_history)
         self._subscriptions: list[Tuple[Instrument, Granularity]] = []
         self.logger = get_logger()
 
