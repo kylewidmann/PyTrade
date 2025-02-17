@@ -48,8 +48,8 @@ class Order(dict):
 
         return (
             f"<Order instrument={self._instrument} size={self._size} "
-            f"stop={self._stop} limit={self._limit} price_bound={self._price_bound}"
-            f"time_in_force={self._time_in_force} tp={self.take_profit_on_fill} sl={self.stop_loss_on_fill}"
+            f"stop={self._stop} limit={self._limit} price_bound={self._price_bound} "
+            f"time_in_force={self._time_in_force} tp={self.take_profit_on_fill} sl={self.stop_loss_on_fill} "
             f"trailing_sl={self._trailing_stop_loss_on_fill} parent_trade={self.__parent_trade}>"
         )
 
