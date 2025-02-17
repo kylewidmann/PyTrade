@@ -92,6 +92,7 @@ class InstrumentCandles(IInstrumentData):
             self.logger.warning(
                 f"Received an duplicate update for {candlestick.instrument}[{candlestick.timestamp}]"
             )
+            return
 
         if self._max_size and len(self._data) >= self._max_size:
             _delta = self._data.index[-1] - self._data.index[-2]
