@@ -146,6 +146,7 @@ and next update time to {self._next_timestamp}"
         time_in_force: TimeInForce = TimeInForce.GOOD_TILL_CANCELLED,
         tp=None,
         sl=None,
+        trailing_sl=None
     ) -> None:
         order = Order(
             instrument,
@@ -155,6 +156,7 @@ and next update time to {self._next_timestamp}"
             time_in_force=time_in_force,
             take_profit_on_fill=tp,
             stop_loss_on_fill=sl,
+            trailing_stop_loss_on_fill=trailing_sl
         )
         self.logger.info(f"Placing order {order}")
         self.broker.order(order)
@@ -168,5 +170,6 @@ and next update time to {self._next_timestamp}"
         time_in_force: TimeInForce = TimeInForce.GOOD_TILL_CANCELLED,
         tp=None,
         sl=None,
+        trailing_sl=None
     ) -> None:
-        self.buy(instrument, -size, stop, limit, time_in_force, tp, sl)
+        self.buy(instrument, -size, stop, limit, time_in_force, tp, sl, trailing_sl)
