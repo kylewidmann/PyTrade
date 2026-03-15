@@ -11,8 +11,7 @@ from pytrade.models import Order
 
 
 class Broker(IBroker):
-
-    def __init__(self, client: IClient , max_history = 100):
+    def __init__(self, client: IClient, max_history=100):
         self.client = client
         self._orders: List[Order] = []
         self._data_context = CandleData(max_size=max_history)
@@ -48,9 +47,7 @@ class Broker(IBroker):
         self._orders.clear()
         self.logger.debug("Orders cleared.")
 
-    def load_instrument_candles(
-        self, instrument: Instrument, granularity: Granularity, count: int
-    ):
+    def load_instrument_candles(self, instrument: Instrument, granularity: Granularity, count: int):
         key = (instrument, granularity)
         self.logger.debug(f"Loading candles for {key}")
 
@@ -68,10 +65,7 @@ can not populate historical data."
             for candle in candles:
                 instrument_data.update(candle)
 
-    def subscribe(
-        self, instrument: Instrument, granularity: Granularity
-    ) -> IInstrumentData:
-
+    def subscribe(self, instrument: Instrument, granularity: Granularity) -> IInstrumentData:
         key = (instrument, granularity)
         self.logger.debug(f"Subscribing to candles for {key}")
 

@@ -19,7 +19,6 @@ from pytrade.models import Order, TimeInForce
 
 
 class FxStrategy:
-
     def __init__(self, broker: IBroker, data_context: IDataContext):
         self.broker = broker
         self._updates_complete = asyncio.Event()
@@ -56,7 +55,7 @@ class FxStrategy:
         self._next_timestamp = Timestamp.min.replace(tzinfo=timezone.utc)
 
         self.logger.debug(
-            f"Set updates to [{str.join(" ", (str(update) for update in self._required_updates))}] \
+            f"Set updates to [{str.join(' ', (str(update) for update in self._required_updates))}] \
 and next update time to {self._next_timestamp}"
         )
 
@@ -97,9 +96,7 @@ and next update time to {self._next_timestamp}"
 
         if data.timestamp == self._next_timestamp:
             self.logger.debug(f"Removing update for {data}.")
-            self._pending_updates.remove(
-                CandleSubscription(data.instrument, data.granularity)
-            )
+            self._pending_updates.remove(CandleSubscription(data.instrument, data.granularity))
 
         # Filter out update from pending
         if not self._pending_updates:
@@ -118,9 +115,7 @@ and next update time to {self._next_timestamp}"
             self._pending_updates = self._required_updates.copy()
             self.logger.debug("Strategy iteration complete. Reset updates.")
 
-    def get_data(
-        self, instrument: Instrument, granularity: Granularity
-    ) -> IInstrumentData:
+    def get_data(self, instrument: Instrument, granularity: Granularity) -> IInstrumentData:
         return self._data_context.get(instrument, granularity)
 
     @abstractmethod
@@ -146,7 +141,7 @@ and next update time to {self._next_timestamp}"
         time_in_force: TimeInForce = TimeInForce.GOOD_TILL_CANCELLED,
         tp=None,
         sl=None,
-        trailing_sl=None
+        trailing_sl=None,
     ) -> None:
         order = Order(
             instrument,
@@ -156,7 +151,7 @@ and next update time to {self._next_timestamp}"
             time_in_force=time_in_force,
             take_profit_on_fill=tp,
             stop_loss_on_fill=sl,
-            trailing_stop_loss_on_fill=trailing_sl
+            trailing_stop_loss_on_fill=trailing_sl,
         )
         self.logger.info(f"Placing order {order}")
         self.broker.order(order)
@@ -170,6 +165,6 @@ and next update time to {self._next_timestamp}"
         time_in_force: TimeInForce = TimeInForce.GOOD_TILL_CANCELLED,
         tp=None,
         sl=None,
-        trailing_sl=None
+        trailing_sl=None,
     ) -> None:
         self.buy(instrument, -size, stop, limit, time_in_force, tp, sl, trailing_sl)

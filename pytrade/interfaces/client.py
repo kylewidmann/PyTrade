@@ -7,7 +7,6 @@ from pytrade.models import Order
 
 
 class IClient:
-
     @classmethod
     def __subclasshook__(cls, subclass):
         return (
@@ -45,9 +44,7 @@ class IClient:
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def get_candle(
-        self, instrument: Instrument, granularity: Granularity
-    ) -> Candlestick:
+    def get_candle(self, instrument: Instrument, granularity: Granularity) -> Candlestick:
         raise NotImplementedError()
 
     @abc.abstractmethod

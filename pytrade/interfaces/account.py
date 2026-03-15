@@ -2,7 +2,6 @@ from abc import abstractmethod
 
 
 class IAccount:
-
     @property
     @abstractmethod
     def equity(self) -> float:

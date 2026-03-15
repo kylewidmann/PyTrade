@@ -54,9 +54,7 @@ def test_trade():
     exit_time = entry_time + timedelta(days=1, hours=2)
     data = MagicMock()
     data.last_price = last_price
-    df = pd.DataFrame(
-        {"Timestamp": [entry_time, exit_time], "Close": [entry_price, exit_price]}
-    )
+    df = pd.DataFrame({"Timestamp": [entry_time, exit_time], "Close": [entry_price, exit_price]})
     df = df.set_index("Timestamp")
     data.df = df
 
@@ -97,9 +95,7 @@ def test_trade_reduce():
     exit_time = entry_time + timedelta(days=1, hours=2)
     data = MagicMock()
     data.last_price = last_price
-    df = pd.DataFrame(
-        {"Timestamp": [entry_time, exit_time], "Close": [entry_price, exit_price]}
-    )
+    df = pd.DataFrame({"Timestamp": [entry_time, exit_time], "Close": [entry_price, exit_price]})
     df = df.set_index("Timestamp")
     data.df = df
 

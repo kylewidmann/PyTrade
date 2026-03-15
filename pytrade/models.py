@@ -10,7 +10,6 @@ from pytrade.interfaces.data import IInstrumentData
 
 
 class TimeInForce(Enum):
-
     GOOD_TILL_CANCELLED = "GTC"
     GOOD_TILL_DATE = "GTD"
     GOOD_FOR_DAY = "GFD"
@@ -19,7 +18,6 @@ class TimeInForce(Enum):
 
 
 class Order(dict):
-
     def __init__(
         self,
         instrument: Instrument,
@@ -45,7 +43,6 @@ class Order(dict):
         self.__parent_trade = parent_trade
 
     def __str__(self):
-
         return (
             f"<Order instrument={self._instrument} size={self._size} "
             f"stop={self._stop} limit={self._limit} price_bound={self._price_bound} "
@@ -72,11 +69,7 @@ class Order(dict):
 
     @property
     def time_in_force(self) -> TimeInForce:
-        return (
-            self._time_in_force
-            if self._time_in_force
-            else TimeInForce.GOOD_TILL_CANCELLED
-        )
+        return self._time_in_force if self._time_in_force else TimeInForce.GOOD_TILL_CANCELLED
 
     @property
     def take_profit_on_fill(self) -> Optional[float]:
@@ -145,9 +138,9 @@ class Trade:
 
     def __str__(self):  # pragma: no cover
         return (
-            f'<Trade size={self.__size} time={self.__entry_time}-{self.__exit_time or ""} '
-            f'price={self.__entry_price}-{self.__exit_price or ""} pl={self.pl:.0f}'
-            f'{" tag=" + str(self.__tag) if self.__tag is not None else ""}>'
+            f"<Trade size={self.__size} time={self.__entry_time}-{self.__exit_time or ''} "
+            f"price={self.__entry_price}-{self.__exit_price or ''} pl={self.pl:.0f}"
+            f"{' tag=' + str(self.__tag) if self.__tag is not None else ''}>"
         )
 
     def reduce(self, size):

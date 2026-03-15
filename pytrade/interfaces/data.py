@@ -8,7 +8,6 @@ from pytrade.instruments import Granularity, Instrument
 
 
 class IInstrumentData:
-
     @property
     @abstractmethod
     def instrument(self) -> Instrument:
@@ -60,7 +59,6 @@ class IInstrumentData:
 
 
 class IDataContext:
-
     @property
     @abstractmethod
     def universe(self) -> list[IInstrumentData]:

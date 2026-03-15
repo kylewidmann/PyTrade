@@ -7,7 +7,6 @@ from pytrade.models import Order
 
 
 class IBroker(metaclass=abc.ABCMeta):
-
     @classmethod
     def __subclasshook__(cls, subclass):
         return (
@@ -46,13 +45,9 @@ class IBroker(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def load_instrument_candles(
-        self, instrument: Instrument, granularity: Granularity, count: int
-    ):
+    def load_instrument_candles(self, instrument: Instrument, granularity: Granularity, count: int):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def subscribe(
-        self, instrument: Instrument, granularity: Granularity
-    ) -> IInstrumentData:
+    def subscribe(self, instrument: Instrument, granularity: Granularity) -> IInstrumentData:
         raise NotImplementedError()

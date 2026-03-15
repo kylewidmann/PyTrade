@@ -16,13 +16,8 @@ INDEX = COLUMNS[0]
 
 
 class InstrumentCandles(IInstrumentData):
-
-    def __init__(
-        self, data: Optional[pd.DataFrame] = None, max_size: Optional[int] = None
-    ):
-        self._data: pd.DataFrame = (
-            data if data is not None else pd.DataFrame(columns=COLUMNS)
-        )
+    def __init__(self, data: Optional[pd.DataFrame] = None, max_size: Optional[int] = None):
+        self._data: pd.DataFrame = data if data is not None else pd.DataFrame(columns=COLUMNS)
         if not isinstance(self._data.index, pd.DatetimeIndex):
             if INDEX in self._data.columns:
                 self._data.set_index([INDEX], inplace=True)
@@ -123,7 +118,6 @@ class InstrumentCandles(IInstrumentData):
 
 
 class CandleData(IDataContext):
-
     def __init__(self, max_size=1000):
         self._data: dict[tuple[Instrument, Granularity], InstrumentCandles] = {}
         self._max_size = max_size
@@ -143,9 +137,7 @@ class CandleData(IDataContext):
         # Need to handle case where instantiatied and different max size is provided
         return cls.instance
 
-    def get(
-        self, instrument: Instrument, granularity: Granularity
-    ) -> InstrumentCandles:
+    def get(self, instrument: Instrument, granularity: Granularity) -> InstrumentCandles:
         key = (instrument, granularity)
         instrument_candles: InstrumentCandles = self._data.get(
             key, InstrumentCandles(max_size=self._max_size)

@@ -63,7 +63,6 @@ instrument_lookup = {m.value: m for m in FxInstrument}
 
 
 class CandleSubscription:
-
     def __init__(self, instrument: Instrument, granularity: Granularity):
         self._instrument = instrument
         self._granularity = granularity
@@ -116,7 +115,6 @@ class CandleSubscription:
 
 
 class Candlestick:
-
     def __init__(
         self,
         instrument: Instrument,
@@ -153,7 +151,6 @@ class Candlestick:
 
 
 class TickData:
-
     instrument: Instrument
     timestamp: datetime
     bid: float
@@ -162,11 +159,11 @@ class TickData:
     def __init__(self, instrument: str, timestamp: str, bid: str, ask: str):
         self.instrument = instrument_lookup[instrument]
         tz = pytz.timezone("UTC")
-        self.timestamp = datetime.strptime(timestamp, "%Y%m%d %H:%M:%S.%f").astimezone(
-            tz
-        )
+        self.timestamp = datetime.strptime(timestamp, "%Y%m%d %H:%M:%S.%f").astimezone(tz)
         self.bid = float(bid)
         self.ask = float(ask)
 
     def __str__(self):
-        return f"<{self.__class__.__name__} {self.instrument} bid={self.bid:.5f} ask={self.ask:.5f}>"
+        return (
+            f"<{self.__class__.__name__} {self.instrument} bid={self.bid:.5f} ask={self.ask:.5f}>"
+        )

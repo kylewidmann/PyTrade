@@ -6,7 +6,6 @@ from pytrade.interfaces.data import IInstrumentData
 
 
 class Indicator:
-
     def __init__(self, data: IInstrumentData):
         self._data = data
         data.on_update += self._update

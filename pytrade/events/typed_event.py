@@ -4,7 +4,6 @@ T = TypeVar("T")
 
 
 class TypedEvent(Generic[T]):
-
     def __init__(self):
         self.__callbacks: list[Callable[[T], None]] = []
 

@@ -27,31 +27,26 @@ def get_candles(
 
 
 class BoolIndicator(Indicator):
-
     def _run(self, *args, **kwargs):
         return self._data.Open.astype(bool)
 
 
 class SquareIndicator(Indicator):
-
     def _run(self, *args, **kwargs):
         return self._data.Open**2
 
 
 class StaticIndicator(Indicator):
-
     def _run(self, *args, **kwargs):
         return self._data.Open
 
 
 class AddIndicator(Indicator):
-
     def _run(self, *args, **kwargs):
         return self._data.Open + 1
 
 
 class SubtractIndicator(Indicator):
-
     def _run(self, *args, **kwargs):
         return self._data.Open - 1
 
@@ -59,9 +54,7 @@ class SubtractIndicator(Indicator):
 def test_update():
     test_series = pd.Series([0, 1, 0, 0, 1])
     data = InstrumentCandles()
-    candles = get_candles(
-        len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now()
-    )
+    candles = get_candles(len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now())
     indicator = BoolIndicator(data)
     for idx, candle in enumerate(candles):
         value = test_series[idx]
@@ -76,9 +69,7 @@ def test_update():
 def test_primitive_equality():
     test_series = pd.Series([0, 1, 2, 3, 4])
     data = InstrumentCandles()
-    candles = get_candles(
-        len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now()
-    )
+    candles = get_candles(len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now())
     indicator = SquareIndicator(data)
     for idx, candle in enumerate(candles):
         value = test_series[idx]
@@ -93,9 +84,7 @@ def test_primitive_equality():
 def test_primitive_greater():
     test_series = pd.Series([0, 1, 2, 3, 4])
     data = InstrumentCandles()
-    candles = get_candles(
-        len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now()
-    )
+    candles = get_candles(len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now())
     indicator = StaticIndicator(data)
     for idx, candle in enumerate(candles):
         value = test_series[idx]
@@ -110,9 +99,7 @@ def test_primitive_greater():
 def test_primitive_less():
     test_series = pd.Series([0, 1, 2, 3, 4])
     data = InstrumentCandles()
-    candles = get_candles(
-        len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now()
-    )
+    candles = get_candles(len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now())
     indicator = StaticIndicator(data)
     for idx, candle in enumerate(candles):
         value = test_series[idx]
@@ -127,9 +114,7 @@ def test_primitive_less():
 def test_indicator_equality():
     test_series = pd.Series([0, 1, 2, 3, 4])
     data = InstrumentCandles()
-    candles = get_candles(
-        len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now()
-    )
+    candles = get_candles(len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now())
     indicator = StaticIndicator(data)
     indicator2 = StaticIndicator(data)
     for idx, candle in enumerate(candles):
@@ -147,9 +132,7 @@ def test_indicator_equality():
 def test_indicator_greater():
     test_series = pd.Series([0, 1, 2, 3, 4])
     data = InstrumentCandles()
-    candles = get_candles(
-        len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now()
-    )
+    candles = get_candles(len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now())
     indicator = StaticIndicator(data)
     indicator2 = SubtractIndicator(data)
     for idx, candle in enumerate(candles):
@@ -167,9 +150,7 @@ def test_indicator_greater():
 def test_indicator_less():
     test_series = pd.Series([0, 1, 2, 3, 4])
     data = InstrumentCandles()
-    candles = get_candles(
-        len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now()
-    )
+    candles = get_candles(len(test_series), FxInstrument.EURUSD, Granularity.M1, datetime.now())
     indicator = StaticIndicator(data)
     indicator2 = AddIndicator(data)
     for idx, candle in enumerate(candles):

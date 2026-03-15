@@ -91,7 +91,6 @@ def test_shift_freq(granularity: Granularity):
 
 @pytest.mark.parametrize("scale", [10, 1000, 10000])
 def test_update_execution_time(scale: int):
-
     dummy_candles = get_candles(scale + 1, Granularity.M1)
     final_df = pd.DataFrame(candles_to_data(dummy_candles[1:]), columns=COLUMNS)
     final_df.set_index(INDEX, inplace=True)
