@@ -7,7 +7,7 @@ authors = ["Kyle Widmann <Kyle.Widmann@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.12"
 pytrade = ">=0.1.0"
 v20 = {git = "https://github.com/kylewidmann/v20-python", rev = "v1.0.0"}
 pyyaml = "^6.0"
