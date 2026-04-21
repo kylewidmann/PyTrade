@@ -1,34 +1,47 @@
 .PHONY: bandit
-bandit: ##@lint Run bandit
-bandit: files ?= ${SERVICE}
+bandit: ##@lint Run bandit security scan
 bandit:
-	${DC} run --rm --no-deps bandit -r ${files}
+	${POETRY} run bandit -r -c .bandit $(SRC_DIRS)
 
 .PHONY: black
-black: ##@lint Run black
-black: files ?= ${SERVICE} tests
+black: ##@lint Run black formatter (check mode)
 black:
-	${DC} run --rm --no-deps black ${files}
+	${POETRY} run black --check $(LINT_DIRS)
+
+.PHONY: black-fix
+black-fix: ##@lint Run black formatter (write mode)
+black-fix:
+	${POETRY} run black $(LINT_DIRS)
 
 .PHONY: flake8
 flake8: ##@lint Run flake8
-flake8: files ?= ${SERVICE} tests
 flake8:
-	${DC} run --rm --no-deps flake8 --config .flake8 ${files}
+	${POETRY} run flake8 --config .flake8 $(LINT_DIRS)
 
 .PHONY: isort
-isort: ##@lint Run isort
-isort: files ?= ${SERVICE} tests
-isort: args ?= --diff --check-only --quiet -rc ${files}
+isort: ##@lint Run isort (check mode)
 isort:
-	${DC} run --rm --no-deps isort ${args}
+	${POETRY} run isort --diff --check-only --quiet $(LINT_DIRS)
+
+.PHONY: isort-fix
+isort-fix: ##@lint Run isort (write mode)
+isort-fix:
+	${POETRY} run isort $(LINT_DIRS)
 
 .PHONY: mypy
-mypy: ##@lint Run mypy
-mypy: args ?= -p ${SERVICE}
+mypy: ##@lint Run mypy type checker
 mypy:
-	${DC} run --rm --no-deps mypy ${args}
+	${POETRY} run mypy $(MYPY_ARGS)
 
 .PHONY: lint
-lint: ##@lint Run lint tools
+lint: ##@lint Run all lint tools
 lint: bandit black flake8 isort mypy
+
+.PHONY: clean-imports
+clean-imports: ##@lint Remove unused imports
+clean-imports:
+	${POETRY} run autoflake --in-place --remove-all-unused-imports --recursive $(LINT_DIRS)
+
+.PHONY: reformat
+reformat: ##@lint Auto-fix imports, isort, and black
+reformat: clean-imports isort-fix black-fix

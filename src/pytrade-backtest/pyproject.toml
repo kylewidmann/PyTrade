@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "pytrade-backtest"
+packages = [{include = "pytradebacktest"}]
+version = "0.1.0"
+description = "Backtesting engine for pytrade strategies"
+authors = ["Kyle Widmann <Kyle.Widmann@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pytrade = ">=0.1.0"
+plotly = "^6.0.0"
+progressbar2 = "^4.5.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
